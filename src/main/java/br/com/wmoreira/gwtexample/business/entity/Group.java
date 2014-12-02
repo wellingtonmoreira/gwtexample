@@ -3,12 +3,14 @@ package br.com.wmoreira.gwtexample.business.entity;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 
+ * @author welingtonmoreira
+ *
+ */
 
 public class Group implements Serializable{
     
-    /**
-     * 
-     */
     private static final long serialVersionUID = -7724237112081511503L;
     
     private int id;

@@ -8,8 +8,14 @@ import java.util.List;
 
 import br.com.wmoreira.gwtexample.business.entity.Group;
 import br.com.wmoreira.gwtexample.integration.datasource.PoolDataSourceFactory;
-import br.com.wmoreira.gwtexample.integration.util.GroupMapper;
+import br.com.wmoreira.gwtexample.integration.util.Crudable;
+import br.com.wmoreira.gwtexample.integration.util.mapper.GroupMapper;
 
+/**
+ * 
+ * @author welingtonmoreira
+ *
+ */
 
 public class GroupDAO implements Crudable<Group> {
 

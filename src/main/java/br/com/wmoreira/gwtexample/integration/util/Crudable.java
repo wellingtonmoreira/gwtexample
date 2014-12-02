@@ -1,7 +1,13 @@
-package br.com.wmoreira.gwtexample.integration.dao;
+package br.com.wmoreira.gwtexample.integration.util;
 
 import java.util.List;
 
+/**
+ * 
+ * @author welingtonmoreira
+ *
+ * @param <T>
+ */
 
 public interface Crudable<T> {
     T find(int id);

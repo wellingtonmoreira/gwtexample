@@ -8,8 +8,14 @@ import java.util.List;
 
 import br.com.wmoreira.gwtexample.business.entity.User;
 import br.com.wmoreira.gwtexample.integration.datasource.PoolDataSourceFactory;
-import br.com.wmoreira.gwtexample.integration.util.UserMapper;
+import br.com.wmoreira.gwtexample.integration.util.Crudable;
+import br.com.wmoreira.gwtexample.integration.util.mapper.UserMapper;
 
+/**
+ * 
+ * @author welingtonmoreira
+ *
+ */
 
 public class UserDAO implements Crudable<User>{
 

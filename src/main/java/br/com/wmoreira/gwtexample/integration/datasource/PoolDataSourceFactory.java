@@ -73,30 +73,29 @@ public class PoolDataSourceFactory {
 	    InputStream is = ClassLoader.getSystemResourceAsStream("db.properties");
 	    p.load(is);
 
-	    p.forEach((k, v) -> {
-		if (k.toString().startsWith("create")) {
+	    
+	    for(Object s : p.keySet()) {
+		if (s.toString().startsWith("create")) {
 		    try {
-			PoolDataSourceFactory.getDataSource().getConnection().prepareCall(v.toString()).execute();
+			PoolDataSourceFactory.getDataSource().getConnection().prepareCall(p.getProperty(s.toString()).toString()).execute();
 		    } catch (Exception e) {
 			//exception handling
 		    }
 		}
-	    });
+	    }
+	    
+//	    Alternativa com Lambda
+//	    p.forEach((k, v) -> {
+//		if (k.toString().startsWith("create")) {
+//		    try {
+//			PoolDataSourceFactory.getDataSource().getConnection().prepareCall(v.toString()).execute();
+//		    } catch (Exception e) {
+//			//exception handling
+//		    }
+//		}
+//	    });
 	} catch (IOException e1) {
 	    //exception handling
 	}
     }
-
-//    public static void main(String[] args)
-//	throws ClassNotFoundException, SQLException, IOException {
-//		DataSource dt = PoolDataSourceFactory.getDataSource();
-//		Connection conn = dt.getConnection();
-//	//	conn.prepareCall("CREATE TABLE USER(username VARCHAR(100), password VARCHAR(100), creationDate DATE,  enabled BOOLEAN, email VARCHAR(50))").execute();
-//		conn.prepareCall("INSERT INTO USER values(1, 'donny', 'passwd', null, false, '')").execute();
-//		ResultSet rs = conn.prepareCall("SELECT * FROM USER").executeQuery();
-//		while(rs.next()) {
-//		    System.out.println(rs.getString(1));
-//		}
-//
-//    }
 }

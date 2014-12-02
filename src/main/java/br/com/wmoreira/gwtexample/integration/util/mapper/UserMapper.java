@@ -1,4 +1,4 @@
-package br.com.wmoreira.gwtexample.integration.util;
+package br.com.wmoreira.gwtexample.integration.util.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,6 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.wmoreira.gwtexample.business.entity.User;
+import br.com.wmoreira.gwtexample.integration.util.Mapper;
+
+/**
+ * 
+ * @author welingtonmoreira
+ *
+ */
 
 public class UserMapper
     implements Mapper<User> {

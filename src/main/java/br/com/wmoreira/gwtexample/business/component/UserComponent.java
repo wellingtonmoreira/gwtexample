@@ -3,9 +3,14 @@ package br.com.wmoreira.gwtexample.business.component;
 import java.util.List;
 
 import br.com.wmoreira.gwtexample.business.entity.User;
-import br.com.wmoreira.gwtexample.integration.dao.Crudable;
 import br.com.wmoreira.gwtexample.integration.dao.UserDAO;
+import br.com.wmoreira.gwtexample.integration.util.Crudable;
 
+/**
+ * 
+ * @author welingtonmoreira
+ *
+ */
 
 public class UserComponent implements Crudable<User>{
 

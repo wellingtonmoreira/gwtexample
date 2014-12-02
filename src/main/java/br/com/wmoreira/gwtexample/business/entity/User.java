@@ -3,12 +3,14 @@ package br.com.wmoreira.gwtexample.business.entity;
 import java.io.Serializable;
 import java.sql.Date;
 
+/**
+ * 
+ * @author welingtonmoreira
+ *
+ */
 
 public class User implements Serializable{
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 8978296459374501482L;
     
     private int id;

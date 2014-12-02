@@ -3,9 +3,14 @@ package br.com.wmoreira.gwtexample.business.component;
 import java.util.List;
 
 import br.com.wmoreira.gwtexample.business.entity.Group;
-import br.com.wmoreira.gwtexample.integration.dao.Crudable;
 import br.com.wmoreira.gwtexample.integration.dao.GroupDAO;
+import br.com.wmoreira.gwtexample.integration.util.Crudable;
 
+/**
+ * 
+ * @author welingtonmoreira
+ *
+ */
 
 public class GroupComponent implements Crudable<Group>{
 
