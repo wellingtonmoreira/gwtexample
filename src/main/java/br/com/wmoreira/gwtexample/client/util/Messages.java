@@ -1,4 +1,4 @@
-package br.com.wmoreira.gwtexample.client;
+package br.com.wmoreira.gwtexample.client.util;
 
 public interface Messages extends com.google.gwt.i18n.client.Messages {
   

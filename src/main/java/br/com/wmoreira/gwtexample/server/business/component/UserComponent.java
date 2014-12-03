@@ -1,10 +1,10 @@
-package br.com.wmoreira.gwtexample.business.component;
+package br.com.wmoreira.gwtexample.server.business.component;
 
 import java.util.List;
 
-import br.com.wmoreira.gwtexample.business.entity.User;
-import br.com.wmoreira.gwtexample.integration.dao.UserDAO;
-import br.com.wmoreira.gwtexample.integration.util.Crudable;
+import br.com.wmoreira.gwtexample.server.integration.dao.UserDAO;
+import br.com.wmoreira.gwtexample.server.integration.util.Crudable;
+import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
 /**
  * 

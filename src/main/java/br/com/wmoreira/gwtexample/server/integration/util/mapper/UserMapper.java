@@ -1,12 +1,12 @@
-package br.com.wmoreira.gwtexample.integration.util.mapper;
+package br.com.wmoreira.gwtexample.server.integration.util.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.wmoreira.gwtexample.business.entity.User;
-import br.com.wmoreira.gwtexample.integration.util.Mapper;
+import br.com.wmoreira.gwtexample.server.integration.util.Mapper;
+import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
 /**
  * 

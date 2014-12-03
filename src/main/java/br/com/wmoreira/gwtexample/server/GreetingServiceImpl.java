@@ -1,7 +1,8 @@
 package br.com.wmoreira.gwtexample.server;
 
-import br.com.wmoreira.gwtexample.client.GreetingService;
+import br.com.wmoreira.gwtexample.client.service.GreetingService;
 import br.com.wmoreira.gwtexample.shared.FieldVerifier;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**

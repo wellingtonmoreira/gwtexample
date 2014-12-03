@@ -1,6 +1,9 @@
 package br.com.wmoreira.gwtexample.client;
 
+import br.com.wmoreira.gwtexample.client.service.GreetingService;
+import br.com.wmoreira.gwtexample.client.service.GreetingServiceAsync;
 import br.com.wmoreira.gwtexample.shared.FieldVerifier;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.rpc.AsyncCallback;

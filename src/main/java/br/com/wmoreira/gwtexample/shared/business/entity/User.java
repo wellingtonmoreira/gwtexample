@@ -1,4 +1,4 @@
-package br.com.wmoreira.gwtexample.business.entity;
+package br.com.wmoreira.gwtexample.shared.business.entity;
 
 import java.io.Serializable;
 import java.sql.Date;

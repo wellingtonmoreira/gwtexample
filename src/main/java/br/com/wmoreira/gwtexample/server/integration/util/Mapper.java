@@ -1,4 +1,4 @@
-package br.com.wmoreira.gwtexample.integration.util;
+package br.com.wmoreira.gwtexample.server.integration.util;
 
 import java.sql.ResultSet;
 import java.util.List;

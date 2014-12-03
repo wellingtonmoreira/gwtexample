@@ -1,4 +1,4 @@
-package br.com.wmoreira.gwtexample.integration.datasource;
+package br.com.wmoreira.gwtexample.server.integration.datasource;
 
 import java.io.IOException;
 import java.io.InputStream;

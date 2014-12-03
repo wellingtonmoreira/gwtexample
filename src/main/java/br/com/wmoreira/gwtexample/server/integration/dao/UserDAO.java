@@ -1,4 +1,4 @@
-package br.com.wmoreira.gwtexample.integration.dao;
+package br.com.wmoreira.gwtexample.server.integration.dao;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -6,10 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-import br.com.wmoreira.gwtexample.business.entity.User;
-import br.com.wmoreira.gwtexample.integration.datasource.PoolDataSourceFactory;
-import br.com.wmoreira.gwtexample.integration.util.Crudable;
-import br.com.wmoreira.gwtexample.integration.util.mapper.UserMapper;
+import br.com.wmoreira.gwtexample.server.integration.datasource.PoolDataSourceFactory;
+import br.com.wmoreira.gwtexample.server.integration.util.Crudable;
+import br.com.wmoreira.gwtexample.server.integration.util.mapper.UserMapper;
+import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
 /**
  * 
