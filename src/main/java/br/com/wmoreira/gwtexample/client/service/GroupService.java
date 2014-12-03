@@ -16,10 +16,14 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("group")
 public interface GroupService
     extends RemoteService {
-    
+
     Group find(int id);
+
     List<Group> findAll();
+
     int create(Group object);
+
     int update(Group object);
+
     int delete(int id);
 }

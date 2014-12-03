@@ -31,10 +31,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class UserListView
     implements Viewable {
 
-    private UserServiceAsync service;
+    private UserServiceAsync userService;
 
     public UserListView() {
-	service = GWT.create(UserService.class);
+	userService = GWT.create(UserService.class);
     }
 
     @Override
@@ -90,7 +90,9 @@ public class UserListView
 	    @Override
 	    public void onSuccess(Integer result) {
 		Window.alert("Usuário removido com sucesso!");
-		service.findAll(findAllCallback);
+		edit.setEnabled(false);
+		delete.setEnabled(false);
+		userService.findAll(findAllCallback);
 	    }
 	};
 
@@ -98,7 +100,7 @@ public class UserListView
 
 	    @Override
 	    public void onClick(ClickEvent event) {
-		service.delete(list.get(grid.getKeyboardSelectedRow()).getId(), deleteCallback);
+		userService.delete(list.get(grid.getKeyboardSelectedRow()).getId(), deleteCallback);
 	    }
 	});
 
@@ -118,7 +120,7 @@ public class UserListView
 	vPanel.add(title);
 	vPanel.add(panel);
 
-	service.findAll(findAllCallback);
+	userService.findAll(findAllCallback);
 
 	ViewPort.setContentView(vPanel, grid);
     }
@@ -144,14 +146,6 @@ public class UserListView
 		return object.getName();
 	    }
 	}, "Nome");
-
-	grid.addColumn(new TextColumn<User>() {
-
-	    @Override
-	    public String getValue(User object) {
-		return object.getPassword();
-	    }
-	}, "Senha");
 
 	grid.addColumn(new TextColumn<User>() {
 

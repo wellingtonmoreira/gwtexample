@@ -19,18 +19,25 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+/**
+ * 
+ * @author welingtonmoreira
+ *
+ */
 
 public class UserFormView
     implements Viewable {
 
-    private boolean     edit;
-    private User        editObject;
-    private UserServiceAsync service;
+    private boolean          edit;
+    private User             editObject;
+    private UserServiceAsync userService;
 
     public UserFormView() {
-	service = GWT.create(UserService.class);
+	userService = GWT.create(UserService.class);
 	edit = false;
     }
 
@@ -59,7 +66,7 @@ public class UserFormView
 	nameLabel.setWidth("65px");
 
 	Label passwordLabel = new Label("Senha");
-	final TextBox passwordField = new TextBox();
+	final PasswordTextBox passwordField = new PasswordTextBox();
 
 	passwordLabel.setWidth("65px");
 
@@ -97,7 +104,7 @@ public class UserFormView
 		new UserListView().showView();
 	    }
 	};
-	
+
 	final AsyncCallback<Integer> updateCallback = new AsyncCallback<Integer>() {
 
 	    @Override
@@ -123,21 +130,18 @@ public class UserFormView
 		new UserListView().showView();
 	    }
 	});
-	
+
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    @Override
 	    public void onClick(ClickEvent event) {
-		User user = new User(nameField.getText(),
-		                     passwordField.getText(),
-		                     new Date(new java.util.Date().getTime()),
-		                     enabledCheckbox.getValue(),
-		                     emailField.getText());
+		User user = new User(nameField.getText(), passwordField.getText(), new Date(new java.util.Date().getTime()),
+		                     enabledCheckbox.getValue(), emailField.getText());
 		if (edit) {
 		    user.setId(editObject.getId());
-		    service.update(user, updateCallback);
+		    userService.update(user, updateCallback);
 		} else {
-		    service.create(user, createCallback);		    
+		    userService.create(user, createCallback);
 		}
 	    }
 	});

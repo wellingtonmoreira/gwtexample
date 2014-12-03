@@ -1,7 +1,6 @@
 package br.com.wmoreira.gwtexample.shared.business.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 
@@ -15,10 +14,13 @@ public class Group implements Serializable{
     
     private int id;
     private String name;
-    private List<User> users;
     
     public Group() {
 	/* default constructor */
+    }
+    
+    public Group(String name) {
+	this.name = name;
     }
     
     public Group(int id, String name) {
@@ -42,11 +44,16 @@ public class Group implements Serializable{
         this.name = name;
     }
     
-    public List<User> getUsers() {
-        return users;
-    }
-    
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public String toString() {
+	StringBuilder builder = new StringBuilder();
+	
+	builder.append("Group {");
+	builder.append("\nid - ");
+	builder.append(getId());
+	builder.append("\nname - ");
+	builder.append(getName());
+	builder.append("\n}");
+	
+	return builder.toString();
     }
 }

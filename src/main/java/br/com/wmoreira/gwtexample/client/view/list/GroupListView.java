@@ -3,18 +3,20 @@ package br.com.wmoreira.gwtexample.client.view.list;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.wmoreira.gwtexample.client.service.GroupService;
+import br.com.wmoreira.gwtexample.client.service.GroupServiceAsync;
 import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
 import br.com.wmoreira.gwtexample.client.view.form.GroupFormView;
 import br.com.wmoreira.gwtexample.client.view.util.Viewable;
 import br.com.wmoreira.gwtexample.shared.business.entity.Group;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -29,12 +31,18 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class GroupListView
     implements Viewable {
 
+    private GroupServiceAsync groupService;
+     
+    public GroupListView() {
+	groupService = GWT.create(GroupService.class);
+    }
+    
     @Override
     public void showView() {
 	VerticalPanel vPanel = new VerticalPanel();
 	HorizontalPanel panel = new HorizontalPanel();
-	final CellTable<Group> grid = new CellTable<>();
 	final List<Group> list = new ArrayList<>();
+	final CellTable<Group> grid = buildGrid();
 
 	Label title = new Label("Listar Grupos");
 	title.setHeight("25px");
@@ -47,6 +55,38 @@ public class GroupListView
 	edit.setEnabled(false);
 	delete.setEnabled(false);
 
+	final AsyncCallback<List<Group>> findAllCallback = new AsyncCallback<List<Group>>() {
+
+	    @Override
+	    public void onFailure(Throwable caught) {
+		Window.alert(caught.getMessage());
+	    }
+
+	    @Override
+	    public void onSuccess(List<Group> result) {
+		Window.alert(String.valueOf(result.size()));
+		list.clear();
+		list.addAll(result);
+		grid.setRowData(list);
+	    }
+	};
+
+	final AsyncCallback<Integer> deleteCallback = new AsyncCallback<Integer>() {
+
+	    @Override
+	    public void onFailure(Throwable caught) {
+		Window.alert("Ocorreu um erro: " + caught.getMessage());
+	    }
+
+	    @Override
+	    public void onSuccess(Integer result) {
+		Window.alert("Grupo removido com sucesso!");
+		edit.setEnabled(false);
+		delete.setEnabled(false);
+		groupService.findAll(findAllCallback);
+	    }
+	};
+	
 	edit.addClickHandler(new ClickHandler() {
 
 	    @Override
@@ -59,15 +99,13 @@ public class GroupListView
 
 	    @Override
 	    public void onClick(ClickEvent event) {
-		Window.alert("Deleting Group with ID " + list.get(grid.getKeyboardSelectedRow()).getId());
+		groupService.delete(list.get(grid.getKeyboardSelectedRow()).getId(), deleteCallback);
 	    }
 	});
 
 	panel.add(edit);
 	panel.add(delete);
 
-	grid.setHeight("50%");
-	grid.setWidth("50%");
 	grid.addDomHandler(new ClickHandler() {
 
 	    @Override
@@ -78,6 +116,21 @@ public class GroupListView
 	    }
 	}, ClickEvent.getType());
 
+	grid.setRowData(list);
+
+	vPanel.add(title);
+	vPanel.add(panel);
+	
+	groupService.findAll(findAllCallback);
+
+	ViewPort.setContentView(vPanel, grid);
+    }
+    
+    private CellTable<Group> buildGrid() {
+	CellTable<Group> grid = new CellTable<>();
+	grid.setHeight("50%");
+	grid.setWidth("50%");
+	
 	grid.addColumn(new TextColumn<Group>() {
 
 	    @Override
@@ -94,22 +147,8 @@ public class GroupListView
 		return object.getName();
 	    }
 	}, "Nome");
-
-	list.add(new Group(1, "Bla"));
-	list.add(new Group(2, "Ble"));
-
-	grid.setRowData(list);
-
-	Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-	    @Override
-	    public void execute() {}
-	});
-
-	vPanel.add(title);
-	vPanel.add(panel);
-
-	ViewPort.setContentView(vPanel, grid);
+	
+	return grid;
     }
 
 }

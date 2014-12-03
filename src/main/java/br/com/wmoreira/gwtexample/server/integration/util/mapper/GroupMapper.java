@@ -18,29 +18,23 @@ public class GroupMapper
     implements Mapper<Group> {
 
     @Override
-    public Group mapResultToObject(ResultSet rs) {
-	try {
-	    if (rs.next()) {
-		return new Group(rs.getInt("group_id"), rs.getString("name"));
-	    }
-	} catch (SQLException e) {
-	    // exception handling
+    public Group mapResultToObject(ResultSet rs) throws SQLException {
+	if (rs.next()) {
+	    return new Group(rs.getInt("group_id"), rs.getString("name"));
 	}
 	return null;
-	
+
     }
 
     @Override
-    public List<Group> mapResultToObjects(ResultSet rs) {
+    public List<Group> mapResultToObjects(ResultSet rs)
+	throws SQLException {
 	List<Group> groups = new ArrayList<Group>();
 
-	try {
-	    while (rs.next()) {
-		groups.add(new Group(rs.getInt("group_id"), rs.getString("name")));
-	    }
-	} catch (SQLException e) {
-	    // exception handling
+	while (rs.next()) {
+	    groups.add(new Group(rs.getInt("group_id"), rs.getString("name")));
 	}
+	
 	return groups;
 
     }

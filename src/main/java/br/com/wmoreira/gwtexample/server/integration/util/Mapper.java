@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface Mapper<T> {
 
-    T mapResultToObject(ResultSet set);
-    List<T> mapResultToObjects(ResultSet set);
+    T mapResultToObject(ResultSet set) throws Exception;
+    List<T> mapResultToObjects(ResultSet set) throws Exception;
     
 }

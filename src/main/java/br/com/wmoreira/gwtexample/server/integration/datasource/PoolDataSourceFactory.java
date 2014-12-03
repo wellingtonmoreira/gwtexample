@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -14,6 +13,7 @@ import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.log4j.Logger;
 
 /**
  * @author welingtonmoreira
@@ -21,52 +21,57 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 
 public class PoolDataSourceFactory {
 
-    public static final Logger	     LOGGER = Logger.getLogger("PoolDataSourceFactory");
-    public static final String       DRIVER = "org.h2.Driver";
-    public static final String       URL    = "jdbc:h2:mem:test";
-    public static final String       USER   = "sa";
-    public static final String       PASSWD = "";
+    public static final Logger       LOGGER = Logger.getLogger(PoolDataSourceFactory.class);
 
     private static GenericObjectPool connectionPool;
     private static DataSource        dataSource;
 
     public static Connection getConnection() {
-	LOGGER.info("Starting getConnection()");
+	LOGGER.info("PoolDataSourceFactory | getConnection()");
+
 	getDataSource();
 	if (dataSource != null) {
 	    LOGGER.info("Datasource not null");
+
 	    try {
 		LOGGER.info("Attempting to retrieve connection from Datasource");
-	        return dataSource.getConnection();
-            } catch (SQLException e) {
-	        LOGGER.info("Exception thrown: " + e.getStackTrace());
-            }
+
+		return dataSource.getConnection();
+	    } catch (SQLException e) {
+		LOGGER.error("Exception thrown: " + e.getMessage());
+	    }
 	}
 	return null;
     }
-    
+
     public static DataSource getDataSource() {
 	try {
-	    LOGGER.info("starting getDataSource()");
+	    LOGGER.info("PoolDataSourceFactory | getDataSource()");
+
 	    if (dataSource == null) {
 		LOGGER.info("Datasource is null");
-		Class.forName(PoolDataSourceFactory.DRIVER);
 
-		connectionPool = new GenericObjectPool();
-		connectionPool.setMaxActive(20);
+		Properties dtProps = getDataSourceProperties();
 
-		ConnectionFactory cf = new DriverManagerConnectionFactory(PoolDataSourceFactory.URL, 
-		                                                          PoolDataSourceFactory.USER,
-		                                                          PoolDataSourceFactory.PASSWD);
+		if (dtProps != null) {
+		    Class.forName(dtProps.getProperty("driver"));
 
-		new PoolableConnectionFactory(cf, connectionPool, null, null, false, true);
+		    connectionPool = new GenericObjectPool();
+		    connectionPool.setMaxActive(20);
 
-		dataSource = new PoolingDataSource(connectionPool);
-		PoolDataSourceFactory.setUpDb();
+		    ConnectionFactory cf = new DriverManagerConnectionFactory(dtProps.getProperty("url"), 
+		                                                              dtProps.getProperty("user"),
+			                                                      dtProps.getProperty("password"));
+
+		    new PoolableConnectionFactory(cf, connectionPool, null, null, false, true);
+
+		    dataSource = new PoolingDataSource(connectionPool);
+		    PoolDataSourceFactory.setUpDb();
+		}
 	    }
 	    return dataSource;
 	} catch (ClassNotFoundException e) {
-	    LOGGER.info("Exception thrown" + e.getStackTrace());
+	    LOGGER.error("Exception thrown" + e.getMessage());
 	    return null;
 	}
     }
@@ -75,24 +80,40 @@ public class PoolDataSourceFactory {
 	return connectionPool;
     }
 
-    public static void setUpDb() {
+    private static void setUpDb() {
+	LOGGER.info("PoolDataSourceFactory | setUpDb()");
+
 	try {
 	    Properties p = new Properties();
 	    InputStream is = PoolDataSourceFactory.class.getResourceAsStream("/db.properties");
 	    p.load(is);
 
-	    
-	    for(Object s : p.keySet()) {
-		if (s.toString().startsWith("create")) {
-		    try {
-			PoolDataSourceFactory.getDataSource().getConnection().prepareCall(p.getProperty(s.toString()).toString()).execute();
-		    } catch (Exception e) {
-			//exception handling
-		    }
+	    for (Object s : p.keySet()) {
+		try {
+		    PoolDataSourceFactory.getDataSource().getConnection().prepareCall(p.getProperty(s.toString()).toString()).execute();
+		    LOGGER.info("db setup done succesfully");
+		} catch (Exception e) {
+		    LOGGER.error("Exception thrown " + e.getMessage());
 		}
+
 	    }
-	} catch (IOException e1) {
-	    //exception handling
+	} catch (IOException e) {
+	    LOGGER.error("Exception thrown " + e.getMessage());
 	}
+    }
+
+    private static Properties getDataSourceProperties() {
+	LOGGER.info("PoolDataSourceFactory | getDataSourceProperties()");
+	Properties p = new Properties();
+	InputStream is = PoolDataSourceFactory.class.getResourceAsStream("/datasource.properties");
+
+	try {
+	    p.load(is);
+	    return p;
+	} catch (IOException e) {
+	    LOGGER.error("Exception thrown " + e.getMessage());
+	    return null;
+	}
+
     }
 }

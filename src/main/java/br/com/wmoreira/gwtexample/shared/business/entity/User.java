@@ -90,4 +90,25 @@ public class User implements Serializable{
         this.email = email;
     }
     
+    public String toString() {
+	StringBuilder builder = new StringBuilder();
+	
+	builder.append("User {");
+	builder.append("\nid - ");
+	builder.append(getId());
+	builder.append("\nname - ");
+	builder.append(getName());
+	builder.append("\npassword - ");
+	builder.append(getPassword());
+	builder.append("\ncreationDate - ");
+	builder.append(getCreationDate().toString());
+	builder.append("\nenabled - ");
+	builder.append(isEnabled());
+	builder.append("\nemail - ");
+	builder.append(getEmail());
+	builder.append("\n}");
+	
+	return builder.toString();
+    }
+    
 }
