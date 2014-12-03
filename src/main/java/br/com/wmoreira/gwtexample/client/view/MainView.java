@@ -10,79 +10,83 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 
-public class MainView implements Viewable {
+public class MainView
+    implements Viewable {
 
-	@Override
-	public void showView() {
-		HorizontalPanel panel = new HorizontalPanel();
-		panel.setWidth("100%");
+    @Override
+    public void showView() {
+	HorizontalPanel panel = new HorizontalPanel();
+	panel.setWidth("100%");
 
-		MenuBar menu = new MenuBar();
-		menu.setAutoOpen(true);
+	MenuBar menu = new MenuBar();
+	menu.setAutoOpen(true);
 
-		menu.addItem(buildUserMenu());
-		menu.addItem(buildGroupMenu());
+	menu.addItem(buildUserMenu());
+	menu.addItem(buildGroupMenu());
 
-		panel.add(menu);
+	panel.add(menu);
 
-		ViewPort.setMenuView(panel);
-	}
+	ViewPort.setMenuView(panel);
+    }
 
-	private MenuItem buildUserMenu() {
-		MenuItem userMenu;
+    private MenuItem buildUserMenu() {
+	MenuItem userMenu;
 
-		MenuBar subMenuUser = new MenuBar(true);
+	MenuBar subMenuUser = new MenuBar(true);
 
-		MenuItem subItemCreate = new MenuItem("Criar",
-				new Scheduler.ScheduledCommand() {
+	MenuItem subItemCreate = new MenuItem("Criar", new Scheduler.ScheduledCommand() {
 
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
+	    @Override
+	    public void execute() {
+		// TODO Auto-generated method stub
 
-					}
-				});
+	    }
+	});
 
-		MenuItem subItemList = new MenuItem("Listar",
-				new Scheduler.ScheduledCommand() {
+	MenuItem subItemList = new MenuItem("Listar", new Scheduler.ScheduledCommand() {
 
-					@Override
-					public void execute() {
-						// TODO Auto-generated method stub
+	    @Override
+	    public void execute() {
+		// TODO Auto-generated method stub
 
-					}
-				});
+	    }
+	});
 
-		subMenuUser.addItem(subItemCreate);
-		subMenuUser.addItem(subItemList);
+	subMenuUser.addItem(subItemCreate);
+	subMenuUser.addItem(subItemList);
 
-		userMenu = new MenuItem("Usuários", subMenuUser);
+	userMenu = new MenuItem("Usuários", subMenuUser);
 
-		return userMenu;
-	}
+	return userMenu;
+    }
 
-	private MenuItem buildGroupMenu() {
-		MenuItem groupMenu;
+    private MenuItem buildGroupMenu() {
+	MenuItem groupMenu;
 
-		MenuBar subMenuGroup = new MenuBar(true);
+	MenuBar subMenuGroup = new MenuBar(true);
 
-		// MenuItem subItemCreate = new
-		// MenuItem(SafeHtmlFactory.createSafeHtmlFromString("Criar"));
-		MenuItem subItemList = new MenuItem("Listar", true,
-				new ScheduledCommand() {
+	MenuItem subItemCreate = new MenuItem("Criar", true, new ScheduledCommand() {
+	    
+	    @Override
+	    public void execute() {
+				
+	    }
+	});
+	MenuItem subItemList = new MenuItem("Listar", true, new ScheduledCommand() {
 
-					@Override
-					public void execute() {
-						new GroupListView().showView();
-					}
-				});
+	    @Override
+	    public void execute() {
+		new GroupListView().showView();
+	    }
+	});
 
-		// subMenuGroup.addItem(subItemCreate);
-		subMenuGroup.addItem(subItemList);
+	// subMenuGroup.addItem(subItemCreate);
+	subMenuGroup.addItem(subItemCreate);
+	subMenuGroup.addItem(subItemList);
 
-		groupMenu = new MenuItem("Grupos", subMenuGroup);
+	groupMenu = new MenuItem("Grupos", subMenuGroup);
 
-		return groupMenu;
-	}
+	return groupMenu;
+    }
 
 }

@@ -5,25 +5,31 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ViewPort {
 
-	public static void setMenuView(Widget object) {
-		RootPanel.get(Panel.MENUPANEL.getPanelName()).add(object);
+    public static void setMenuView(Widget... object) {
+	RootPanel.get(Panel.MENUPANEL.getPanelName()).clear();
+	for (Widget w : object) {
+	    RootPanel.get(Panel.MENUPANEL.getPanelName()).add(w);
+	}
+    }
+
+    public static void setContentView(Widget... object) {
+	RootPanel.get(Panel.CONTENTPANEL.getPanelName()).clear();
+	for (Widget w : object) {
+	    RootPanel.get(Panel.MENUPANEL.getPanelName()).add(w);
+	}
+    }
+
+    private enum Panel {
+	MENUPANEL("menuPanel"), CONTENTPANEL("contentPanel");
+
+	private String panelName;
+
+	Panel(String panelName) {
+	    this.panelName = panelName;
 	}
 
-	public static void setContentView(Widget object) {
-		RootPanel.get(Panel.CONTENTPANEL.getPanelName()).add(object);
+	public String getPanelName() {
+	    return panelName;
 	}
-
-	private enum Panel {
-		MENUPANEL("menuPanel"), CONTENTPANEL("contentPanel");
-
-		private String panelName;
-
-		Panel(String panelName) {
-			this.panelName = panelName;
-		}
-
-		public String getPanelName() {
-			return panelName;
-		}
-	}
+    }
 }
