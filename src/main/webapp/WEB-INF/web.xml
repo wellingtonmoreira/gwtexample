@@ -7,13 +7,21 @@
 
   <!-- Servlets -->
   <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>br.com.wmoreira.gwtexample.server.GreetingServiceImpl</servlet-class>
+  	<servlet-name>userServlet</servlet-name>
+  	<servlet-class>br.com.wmoreira.gwtexample.server.service.UserServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>groupServlet</servlet-name>
+  	<servlet-class>br.com.wmoreira.gwtexample.server.service.GroupServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/App/greet</url-pattern>
+    <servlet-name>userServlet</servlet-name>
+    <url-pattern>/App/user</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>groupServlet</servlet-name>
+    <url-pattern>/App/group</url-pattern>
   </servlet-mapping>
 
   <!-- Default page to serve -->

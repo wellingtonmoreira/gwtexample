@@ -1,14 +1,16 @@
 package br.com.wmoreira.gwtexample.client.view.list;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.wmoreira.gwtexample.client.service.UserService;
+import br.com.wmoreira.gwtexample.client.service.UserServiceAsync;
 import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
 import br.com.wmoreira.gwtexample.client.view.form.UserFormView;
 import br.com.wmoreira.gwtexample.client.view.util.Viewable;
 import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -16,6 +18,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -30,8 +33,15 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class UserListView
     implements Viewable {
 
+    private UserServiceAsync service;
+
+    public UserListView() {
+	service = GWT.create(UserService.class);
+    }
+
     @Override
     public void showView() {
+
 	VerticalPanel vPanel = new VerticalPanel();
 	HorizontalPanel panel = new HorizontalPanel();
 	final CellTable<User> grid = new CellTable<>();
@@ -128,8 +138,8 @@ public class UserListView
 	    }
 	}, "E-mail");
 
-	list.add(new User(1, "joaobluffs", "123456", new Date(new java.util.Date().getTime()), true, "joao@bluffs.com"));
-	list.add(new User(2, "martinfowler", "654321", new Date(new java.util.Date().getTime()), true, "martin@fowler.com"));
+	//list.add(new User(1, "joaobluffs", "123456", new Date(new java.util.Date().getTime()), true, "joao@bluffs.com"));
+	//list.add(new User(2, "martinfowler", "654321", new Date(new java.util.Date().getTime()), true, "martin@fowler.com"));
 
 	grid.setRowData(list);
 
@@ -141,6 +151,24 @@ public class UserListView
 
 	vPanel.add(title);
 	vPanel.add(panel);
+
+	AsyncCallback<List<User>> findAllCallback = new AsyncCallback<List<User>>() {
+
+	    @Override
+	    public void onFailure(Throwable caught) {
+		Window.alert(caught.getMessage());
+	    }
+
+	    @Override
+	    public void onSuccess(List<User> result) {
+		list.clear();
+		Window.alert("Successful call");
+		list.addAll(result);
+
+	    }
+	};
+	
+	service.findAll(findAllCallback);
 
 	ViewPort.setContentView(vPanel, grid);
     }

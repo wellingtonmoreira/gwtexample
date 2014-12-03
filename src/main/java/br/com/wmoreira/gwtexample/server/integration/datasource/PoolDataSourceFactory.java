@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -20,6 +21,7 @@ import org.apache.commons.pool.impl.GenericObjectPool;
 
 public class PoolDataSourceFactory {
 
+    public static final Logger	     LOGGER = Logger.getLogger("PoolDataSourceFactory");
     public static final String       DRIVER = "org.h2.Driver";
     public static final String       URL    = "jdbc:h2:mem:test";
     public static final String       USER   = "sa";
@@ -29,12 +31,15 @@ public class PoolDataSourceFactory {
     private static DataSource        dataSource;
 
     public static Connection getConnection() {
+	LOGGER.info("Starting getConnection()");
 	getDataSource();
 	if (dataSource != null) {
+	    LOGGER.info("Datasource not null");
 	    try {
+		LOGGER.info("Attempting to retrieve connection from Datasource");
 	        return dataSource.getConnection();
             } catch (SQLException e) {
-	        //Exception handling
+	        LOGGER.info("Exception thrown: " + e.getStackTrace());
             }
 	}
 	return null;
@@ -42,7 +47,9 @@ public class PoolDataSourceFactory {
     
     public static DataSource getDataSource() {
 	try {
+	    LOGGER.info("starting getDataSource()");
 	    if (dataSource == null) {
+		LOGGER.info("Datasource is null");
 		Class.forName(PoolDataSourceFactory.DRIVER);
 
 		connectionPool = new GenericObjectPool();
@@ -59,6 +66,7 @@ public class PoolDataSourceFactory {
 	    }
 	    return dataSource;
 	} catch (ClassNotFoundException e) {
+	    LOGGER.info("Exception thrown" + e.getStackTrace());
 	    return null;
 	}
     }
@@ -70,7 +78,7 @@ public class PoolDataSourceFactory {
     public static void setUpDb() {
 	try {
 	    Properties p = new Properties();
-	    InputStream is = ClassLoader.getSystemResourceAsStream("db.properties");
+	    InputStream is = PoolDataSourceFactory.class.getResourceAsStream("/db.properties");
 	    p.load(is);
 
 	    
@@ -83,17 +91,6 @@ public class PoolDataSourceFactory {
 		    }
 		}
 	    }
-	    
-//	    Alternativa com Lambda
-//	    p.forEach((k, v) -> {
-//		if (k.toString().startsWith("create")) {
-//		    try {
-//			PoolDataSourceFactory.getDataSource().getConnection().prepareCall(v.toString()).execute();
-//		    } catch (Exception e) {
-//			//exception handling
-//		    }
-//		}
-//	    });
 	} catch (IOException e1) {
 	    //exception handling
 	}

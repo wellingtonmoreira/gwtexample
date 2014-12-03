@@ -33,7 +33,7 @@ public class UserFormView
 
     @Override
     public void showView() {
-	Label title = new Label(edit ? "Editar Grupo" : "Cadastrar Grupo");
+	Label title = new Label(edit ? "Editar Usuário" : "Cadastrar Usuário");
 	title.setHeight("25px");
 
 	FormPanel form = new FormPanel();

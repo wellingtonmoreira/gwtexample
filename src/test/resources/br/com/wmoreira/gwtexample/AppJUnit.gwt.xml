@@ -4,6 +4,6 @@
   <inherits name='br.com.wmoreira.gwtexample.App' />
 
   <!-- Specify the path to any remote services.                   -->
-  <servlet path="/App/greet" class="br.com.wmoreira.gwtexample.server.GreetingServiceImpl" />
+  <servlet path="/App/greet" class="br.com.wmoreira.gwtexample.server.service.GreetingServiceImpl" />
 
 </module>
