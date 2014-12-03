@@ -11,8 +11,6 @@ import br.com.wmoreira.gwtexample.client.view.util.Viewable;
 import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -44,8 +42,9 @@ public class UserListView
 
 	VerticalPanel vPanel = new VerticalPanel();
 	HorizontalPanel panel = new HorizontalPanel();
-	final CellTable<User> grid = new CellTable<>();
 	final List<User> list = new ArrayList<>();
+	
+	final CellTable<User> grid = buildGrid();
 
 	Label title = new Label("Listar Usuários");
 	title.setHeight("25px");
@@ -66,19 +65,46 @@ public class UserListView
 	    }
 	});
 
+	final AsyncCallback<List<User>> findAllCallback = new AsyncCallback<List<User>>() {
+
+	    @Override
+	    public void onFailure(Throwable caught) {
+		Window.alert(caught.getMessage());
+	    }
+
+	    @Override
+	    public void onSuccess(List<User> result) {
+		list.clear();
+		list.addAll(result);
+		grid.setRowData(list);
+	    }
+	};
+
+	final AsyncCallback<Integer> deleteCallback = new AsyncCallback<Integer>() {
+
+	    @Override
+	    public void onFailure(Throwable caught) {
+		Window.alert("Ocorreu um erro: " + caught.getMessage());
+	    }
+
+	    @Override
+	    public void onSuccess(Integer result) {
+		Window.alert("Usuário removido com sucesso!");
+		service.findAll(findAllCallback);
+	    }
+	};
+
 	delete.addClickHandler(new ClickHandler() {
 
 	    @Override
 	    public void onClick(ClickEvent event) {
-		Window.alert("Deleting User with ID " + list.get(grid.getKeyboardSelectedRow()).getId());
+		service.delete(list.get(grid.getKeyboardSelectedRow()).getId(), deleteCallback);
 	    }
 	});
 
 	panel.add(edit);
 	panel.add(delete);
 
-	grid.setHeight("50%");
-	grid.setWidth("50%");
 	grid.addDomHandler(new ClickHandler() {
 
 	    @Override
@@ -88,6 +114,19 @@ public class UserListView
 
 	    }
 	}, ClickEvent.getType());
+
+	vPanel.add(title);
+	vPanel.add(panel);
+
+	service.findAll(findAllCallback);
+
+	ViewPort.setContentView(vPanel, grid);
+    }
+
+    private CellTable<User> buildGrid() {
+	CellTable<User> grid = new CellTable<>();
+	grid.setHeight("50%");
+	grid.setWidth("50%");
 
 	grid.addColumn(new TextColumn<User>() {
 
@@ -138,38 +177,6 @@ public class UserListView
 	    }
 	}, "E-mail");
 
-	//list.add(new User(1, "joaobluffs", "123456", new Date(new java.util.Date().getTime()), true, "joao@bluffs.com"));
-	//list.add(new User(2, "martinfowler", "654321", new Date(new java.util.Date().getTime()), true, "martin@fowler.com"));
-
-	grid.setRowData(list);
-
-	Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-	    @Override
-	    public void execute() {}
-	});
-
-	vPanel.add(title);
-	vPanel.add(panel);
-
-	AsyncCallback<List<User>> findAllCallback = new AsyncCallback<List<User>>() {
-
-	    @Override
-	    public void onFailure(Throwable caught) {
-		Window.alert(caught.getMessage());
-	    }
-
-	    @Override
-	    public void onSuccess(List<User> result) {
-		list.clear();
-		Window.alert("Successful call");
-		list.addAll(result);
-
-	    }
-	};
-	
-	service.findAll(findAllCallback);
-
-	ViewPort.setContentView(vPanel, grid);
+	return grid;
     }
 }

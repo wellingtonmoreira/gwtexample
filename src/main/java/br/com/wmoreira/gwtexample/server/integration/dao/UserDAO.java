@@ -31,7 +31,7 @@ public class UserDAO implements Crudable<User>{
     public User find(int id) {
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("SELECT * FROM user WHERE user_id = ?");
-	    stmt.setInt(0, id);
+	    stmt.setInt(1, id);
 	    return mapper.mapResultToObject(stmt.executeQuery());
         } catch (SQLException e) {
 	    // exception handling
@@ -54,11 +54,11 @@ public class UserDAO implements Crudable<User>{
     public int create(User object) {
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("INSERT INTO user VALUES(NEXTVAL('user_seq'), ?, ?, ?, ?, ?)");
-	    stmt.setString(0, object.getName());
-	    stmt.setString(1, object.getPassword());
-	    stmt.setDate(2, object.getCreationDate());
-	    stmt.setBoolean(3, object.isEnabled());
-	    stmt.setString(4, object.getEmail());
+	    stmt.setString(1, object.getName());
+	    stmt.setString(2, object.getPassword());
+	    stmt.setDate(3, object.getCreationDate());
+	    stmt.setBoolean(4, object.isEnabled());
+	    stmt.setString(5, object.getEmail());
 	    return stmt.executeUpdate();
         } catch (SQLException e) {
 	    // exception handling
@@ -69,13 +69,13 @@ public class UserDAO implements Crudable<User>{
     @Override
     public int update(User object) {
 	try {
-	    PreparedStatement stmt = conn.prepareStatement("UPDATE user SET name = ?, password = ?, creation_date = ?, enabled = ?, email = ? WHERE user_id = ?)");
-	    stmt.setString(0, object.getName());
-	    stmt.setString(1, object.getPassword());
-	    stmt.setDate(2, object.getCreationDate());
-	    stmt.setBoolean(3, object.isEnabled());
-	    stmt.setString(4, object.getEmail());
-	    stmt.setInt(5, object.getId());
+	    PreparedStatement stmt = conn.prepareStatement("UPDATE user SET name = ?, password = ?, creation_date = ?, enabled = ?, email = ? WHERE user_id = ?");
+	    stmt.setString(1, object.getName());
+	    stmt.setString(2, object.getPassword());
+	    stmt.setDate(3, object.getCreationDate());
+	    stmt.setBoolean(4, object.isEnabled());
+	    stmt.setString(5, object.getEmail());
+	    stmt.setInt(6, object.getId());
 	    return stmt.executeUpdate();
         } catch (SQLException e) {
 	    // exception handling
@@ -87,7 +87,7 @@ public class UserDAO implements Crudable<User>{
     public int delete(int id) {
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("DELETE FROM user WHERE user_id = ?");
-	    stmt.setInt(0, id);
+	    stmt.setInt(1, id);
 	    return stmt.executeUpdate();
         } catch (SQLException e) {
 	    // exception handling

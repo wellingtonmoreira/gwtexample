@@ -24,7 +24,7 @@ public class UserMapper
 		return new User(rs.getInt("user_id"), 
 		                rs.getString("name"), 
 		                rs.getString("password"), 
-		                rs.getDate("creationDate"), 
+		                rs.getDate("creation_date"), 
 		                rs.getBoolean("enabled"), 
 		                rs.getString("email"));
 	    }
@@ -37,16 +37,16 @@ public class UserMapper
 
     @Override
     public List<User> mapResultToObjects(ResultSet rs) {
-	List<User> groups = new ArrayList<User>();
+	List<User> groups = new ArrayList<>();
 
 	try {
 	    while (rs.next()) {
 		groups.add(new User(rs.getInt("user_id"), 
-			                rs.getString("name"), 
-			                rs.getString("password"), 
-			                rs.getDate("creationDate"), 
-			                rs.getBoolean("enabled"), 
-			                rs.getString("email")));
+			            rs.getString("name"), 
+			            rs.getString("password"), 
+			            rs.getDate("creation_date"), 
+			            rs.getBoolean("enabled"), 
+			            rs.getString("email")));
 	    }
 	} catch (SQLException e) {
 	    // exception handling

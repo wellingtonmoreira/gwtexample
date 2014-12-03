@@ -1,13 +1,19 @@
 package br.com.wmoreira.gwtexample.client.view.form;
 
+import java.sql.Date;
+
+import br.com.wmoreira.gwtexample.client.service.UserService;
+import br.com.wmoreira.gwtexample.client.service.UserServiceAsync;
 import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
 import br.com.wmoreira.gwtexample.client.view.list.UserListView;
 import br.com.wmoreira.gwtexample.client.view.util.Viewable;
 import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -19,14 +25,17 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class UserFormView
     implements Viewable {
 
-    private boolean edit;
-    private User   editObject;
+    private boolean     edit;
+    private User        editObject;
+    private UserServiceAsync service;
 
     public UserFormView() {
+	service = GWT.create(UserService.class);
 	edit = false;
     }
 
     public UserFormView(User editObject) {
+	this();
 	this.edit = true;
 	this.editObject = editObject;
     }
@@ -45,35 +54,64 @@ public class UserFormView
 	HorizontalPanel row1 = new HorizontalPanel();
 
 	Label nameLabel = new Label("Nome");
-	TextBox nameField = new TextBox();
+	final TextBox nameField = new TextBox();
 
 	nameLabel.setWidth("65px");
 
-	
 	Label passwordLabel = new Label("Senha");
-	TextBox passwordField = new TextBox();
-	
+	final TextBox passwordField = new TextBox();
+
 	passwordLabel.setWidth("65px");
-	
+
 	row1.add(nameLabel);
 	row1.add(nameField);
 	row1.add(passwordLabel);
 	row1.add(passwordField);
-	
+
 	HorizontalPanel row2 = new HorizontalPanel();
-	
-	CheckBox enabledCheckbox = new CheckBox("Ativo?");
-	
+
+	final CheckBox enabledCheckbox = new CheckBox("Ativo?");
+
 	Label emailLabel = new Label("E-mail");
-	TextBox emailField = new TextBox();
-	
+	final TextBox emailField = new TextBox();
+
 	emailLabel.setWidth("65px");
 
 	row2.add(emailLabel);
 	row2.add(emailField);
 	row2.add(enabledCheckbox);
-	
+
 	HorizontalPanel buttons = new HorizontalPanel();
+
+	final AsyncCallback<Integer> createCallback = new AsyncCallback<Integer>() {
+
+	    @Override
+	    public void onFailure(Throwable caught) {
+		Window.alert("Ocorreu um erro: " + caught.getMessage());
+
+	    }
+
+	    @Override
+	    public void onSuccess(Integer result) {
+		Window.alert("Usuário cadastrado com sucesso!");
+		new UserListView().showView();
+	    }
+	};
+	
+	final AsyncCallback<Integer> updateCallback = new AsyncCallback<Integer>() {
+
+	    @Override
+	    public void onFailure(Throwable caught) {
+		Window.alert("Ocorreu um erro: " + caught.getMessage());
+
+	    }
+
+	    @Override
+	    public void onSuccess(Integer result) {
+		Window.alert("Usuário atualizado com sucesso!");
+		new UserListView().showView();
+	    }
+	};
 
 	Button cancelButton = new Button("Cancelar");
 	Button saveButton = new Button("Salvar");
@@ -85,12 +123,22 @@ public class UserFormView
 		new UserListView().showView();
 	    }
 	});
-
+	
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    @Override
 	    public void onClick(ClickEvent event) {
-		Window.alert("User saved!");
+		User user = new User(nameField.getText(),
+		                     passwordField.getText(),
+		                     new Date(new java.util.Date().getTime()),
+		                     enabledCheckbox.getValue(),
+		                     emailField.getText());
+		if (edit) {
+		    user.setId(editObject.getId());
+		    service.update(user, updateCallback);
+		} else {
+		    service.create(user, createCallback);		    
+		}
 	    }
 	});
 
