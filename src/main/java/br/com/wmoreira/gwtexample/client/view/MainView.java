@@ -1,7 +1,10 @@
 package br.com.wmoreira.gwtexample.client.view;
 
+import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
+import br.com.wmoreira.gwtexample.client.view.form.GroupFormView;
+import br.com.wmoreira.gwtexample.client.view.form.UserFormView;
 import br.com.wmoreira.gwtexample.client.view.list.GroupListView;
-import br.com.wmoreira.gwtexample.client.view.util.ViewPort;
+import br.com.wmoreira.gwtexample.client.view.list.UserListView;
 import br.com.wmoreira.gwtexample.client.view.util.Viewable;
 
 import com.google.gwt.core.client.Scheduler;
@@ -17,6 +20,7 @@ public class MainView
     public void showView() {
 	HorizontalPanel panel = new HorizontalPanel();
 	panel.setWidth("100%");
+	panel.setHeight("50px");
 
 	MenuBar menu = new MenuBar();
 	menu.setAutoOpen(true);
@@ -34,11 +38,11 @@ public class MainView
 
 	MenuBar subMenuUser = new MenuBar(true);
 
-	MenuItem subItemCreate = new MenuItem("Criar", new Scheduler.ScheduledCommand() {
+	MenuItem subItemCreate = new MenuItem("Cadastrar", new Scheduler.ScheduledCommand() {
 
 	    @Override
 	    public void execute() {
-		// TODO Auto-generated method stub
+		new UserFormView().showView();
 
 	    }
 	});
@@ -47,8 +51,7 @@ public class MainView
 
 	    @Override
 	    public void execute() {
-		// TODO Auto-generated method stub
-
+		new UserListView().showView();
 	    }
 	});
 
@@ -65,11 +68,11 @@ public class MainView
 
 	MenuBar subMenuGroup = new MenuBar(true);
 
-	MenuItem subItemCreate = new MenuItem("Criar", true, new ScheduledCommand() {
+	MenuItem subItemCreate = new MenuItem("Cadastrar", true, new ScheduledCommand() {
 	    
 	    @Override
 	    public void execute() {
-				
+		new GroupFormView().showView();
 	    }
 	});
 	MenuItem subItemList = new MenuItem("Listar", true, new ScheduledCommand() {
@@ -80,7 +83,6 @@ public class MainView
 	    }
 	});
 
-	// subMenuGroup.addItem(subItemCreate);
 	subMenuGroup.addItem(subItemCreate);
 	subMenuGroup.addItem(subItemList);
 
