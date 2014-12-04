@@ -1,6 +1,5 @@
 package br.com.wmoreira.gwtexample.client.view.util;
 
-
-public interface Viewable {
+interface Viewable {
     void show();
 }

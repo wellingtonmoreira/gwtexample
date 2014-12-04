@@ -4,9 +4,8 @@ import java.sql.Date;
 
 import br.com.wmoreira.gwtexample.client.service.UserService;
 import br.com.wmoreira.gwtexample.client.service.UserServiceAsync;
-import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
 import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
-import br.com.wmoreira.gwtexample.client.view.util.Viewable;
+import br.com.wmoreira.gwtexample.client.view.util.ContentView;
 import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
 import com.google.gwt.core.shared.GWT;
@@ -15,7 +14,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -30,33 +28,32 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class EditUserView
-    implements Viewable {
+public class EditUserView extends ContentView {
 
     private boolean          edit;
     private User             editObject;
     private UserServiceAsync userService;
 
     public EditUserView() {
-	userService = GWT.create(UserService.class);
 	edit = false;
+	construct();
     }
 
     public EditUserView(User editObject) {
-	this();
 	this.edit = true;
 	this.editObject = editObject;
+	construct();
     }
-
-    @Override
-    public void show() {
+    
+    private void construct() {
+	userService = GWT.create(UserService.class);
+	
 	Label title = new Label(edit ? "Editar Usuário" : "Cadastrar Usuário");
 	title.setHeight("25px");
 	title.setStyleName("h2");
 	FormPanel form = new FormPanel();
 	VerticalPanel rows = new VerticalPanel();
-	FlowPanel flowPanel = new FlowPanel();
-	flowPanel.setStyleName("content");
+	this.setStyleName("content");
 
 	rows.setSpacing(10);
 
@@ -162,10 +159,8 @@ public class EditUserView
 
 	form.add(rows);
 
-	flowPanel.add(title);
-	flowPanel.add(form);
-
-	ViewPort.setContentView(flowPanel);
+	this.add(title);
+	this.add(form);
     }
 
 }

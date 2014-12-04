@@ -5,10 +5,9 @@ import java.util.List;
 
 import br.com.wmoreira.gwtexample.client.service.UserService;
 import br.com.wmoreira.gwtexample.client.service.UserServiceAsync;
-import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
 import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
 import br.com.wmoreira.gwtexample.client.view.util.ConfirmDialog;
-import br.com.wmoreira.gwtexample.client.view.util.Viewable;
+import br.com.wmoreira.gwtexample.client.view.util.ContentView;
 import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
 import com.google.gwt.core.client.GWT;
@@ -18,7 +17,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -29,23 +27,17 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class UsersView
-    implements Viewable {
+public class UsersView extends ContentView{
 
     private UserServiceAsync userService;
 
     public UsersView() {
 	userService = GWT.create(UserService.class);
-    }
-
-    @Override
-    public void show() {
+	this.setStyleName("content");
 
 	VerticalPanel vPanel = new VerticalPanel();
 	HorizontalPanel panel = new HorizontalPanel();
 	final List<User> list = new ArrayList<>();
-	FlowPanel flowPanel = new FlowPanel();
-	flowPanel.setStyleName("content");
 
 	final CellTable<User> grid = buildGrid();
 
@@ -106,7 +98,7 @@ public class UsersView
 	    @Override
 	    public void onClick(ClickEvent event) {
 		ClickHandler okHandler = new ClickHandler() {
-		    
+
 		    @Override
 		    public void onClick(ClickEvent event) {
 			userService.delete(list.get(grid.getKeyboardSelectedRow()).getId(), deleteCallback);
@@ -134,10 +126,8 @@ public class UsersView
 
 	userService.findAll(findAllCallback);
 
-	flowPanel.add(vPanel);
-	flowPanel.add(grid);
-
-	ViewPort.setContentView(flowPanel);
+	this.add(vPanel);
+	this.add(grid);
     }
 
     private CellTable<User> buildGrid() {

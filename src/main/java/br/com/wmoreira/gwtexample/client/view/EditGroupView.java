@@ -2,9 +2,8 @@ package br.com.wmoreira.gwtexample.client.view;
 
 import br.com.wmoreira.gwtexample.client.service.GroupService;
 import br.com.wmoreira.gwtexample.client.service.GroupServiceAsync;
-import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
 import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
-import br.com.wmoreira.gwtexample.client.view.util.Viewable;
+import br.com.wmoreira.gwtexample.client.view.util.ContentView;
 import br.com.wmoreira.gwtexample.shared.business.entity.Group;
 
 import com.google.gwt.core.client.GWT;
@@ -12,7 +11,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -26,29 +24,29 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class EditGroupView 
-    implements Viewable {
+public class EditGroupView extends ContentView {
 
     private boolean           edit;
     private Group             editObject;
     private GroupServiceAsync groupService;
 
     public EditGroupView() {
-	groupService = GWT.create(GroupService.class);
-	edit = false;
+	this.edit = false;
+	construct();
     }
 
     public EditGroupView(Group editObject) {
-	this();
 	this.edit = true;
 	this.editObject = editObject;
+	construct();
     }
-
-    @Override
-    public void show() {
+    
+    private void construct() {
+	groupService = GWT.create(GroupService.class);
+	
 	FormPanel form = new FormPanel();
-	FlowPanel flowPanel = new FlowPanel();
-	flowPanel.setStyleName("content");
+
+	this.setStyleName("content");
 
 	Label title = new Label(edit ? "Editar Grupo" : "Cadastrar Grupo");
 	title.setHeight("25px");
@@ -137,11 +135,8 @@ public class EditGroupView
 
 	form.add(rows);
 
-	flowPanel.add(title);
-	flowPanel.add(form);
-
-	ViewPort.setContentView(flowPanel);
-
+	this.add(title);
+	this.add(form);
     }
 
 }

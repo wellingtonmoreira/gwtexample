@@ -5,10 +5,9 @@ import java.util.List;
 
 import br.com.wmoreira.gwtexample.client.service.GroupService;
 import br.com.wmoreira.gwtexample.client.service.GroupServiceAsync;
-import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
 import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
 import br.com.wmoreira.gwtexample.client.view.util.ConfirmDialog;
-import br.com.wmoreira.gwtexample.client.view.util.Viewable;
+import br.com.wmoreira.gwtexample.client.view.util.ContentView;
 import br.com.wmoreira.gwtexample.shared.business.entity.Group;
 
 import com.google.gwt.core.shared.GWT;
@@ -18,7 +17,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -29,26 +27,23 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class GroupsView
-    implements Viewable {
-
+public class GroupsView extends ContentView {
     private GroupServiceAsync groupService;
-
+    final List<Group> list;
+    final CellTable<Group> grid;
+    final Button edit;
+    final Button delete;
+    
     public GroupsView() {
 	groupService = GWT.create(GroupService.class);
-    }
-
-    @Override
-    public void show() {
+	list = new ArrayList<Group>();
+	grid = buildGrid();
+	edit = new Button("Editar");
+	delete = new Button("Deletar");
+	this.setStyleName("content");
+	
 	VerticalPanel vPanel = new VerticalPanel();
 	HorizontalPanel hPanel = new HorizontalPanel();
-	final List<Group> list = new ArrayList<>();
-	FlowPanel flowPanel = new FlowPanel();
-	flowPanel.setStyleName("content");
-
-	final CellTable<Group> grid = buildGrid();
-
-	grid.setRowCount(10);
 
 	Label title = new Label("Listar Grupos");
 
@@ -57,8 +52,6 @@ public class GroupsView
 
 	hPanel.setSpacing(5);
 
-	final Button edit = new Button("Editar");
-	final Button delete = new Button("Deletar");
 
 	edit.setEnabled(false);
 	delete.setEnabled(false);
@@ -138,10 +131,8 @@ public class GroupsView
 
 	groupService.findAll(findAllCallback);
 
-	flowPanel.add(vPanel);
-	flowPanel.add(grid);
-
-	ViewPort.setContentView(flowPanel);
+	this.add(vPanel);
+	this.add(grid);
     }
 
     private CellTable<Group> buildGrid() {

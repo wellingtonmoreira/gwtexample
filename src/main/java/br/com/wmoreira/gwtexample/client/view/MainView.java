@@ -1,22 +1,17 @@
 package br.com.wmoreira.gwtexample.client.view;
 
-import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
-import br.com.wmoreira.gwtexample.client.view.util.Viewable;
+import br.com.wmoreira.gwtexample.client.view.util.MenuView;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 
-public class MainView
-    implements Viewable {
+public class MainView extends MenuView {
 
-    @Override
-    public void show() {
-	HorizontalPanel panel = new HorizontalPanel();
-	panel.setWidth("100%");
-	panel.setHeight("50px");
+    public MainView() {
+	this.setWidth("100%");
+	this.setHeight("50px");
 
 	MenuBar menu = new MenuBar();
 	menu.setAutoOpen(true);
@@ -24,9 +19,7 @@ public class MainView
 	menu.addItem(buildUserMenu());
 	menu.addItem(buildGroupMenu());
 
-	panel.add(menu);
-
-	ViewPort.setMenuView(panel);
+	this.add(menu);
     }
 
     private MenuItem buildUserMenu() {
