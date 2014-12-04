@@ -12,6 +12,7 @@ import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.log4j.Logger;
 
@@ -21,8 +22,8 @@ import org.apache.log4j.Logger;
 
 public class PoolDataSourceFactory {
 
-    public static final Logger       LOGGER = Logger.getLogger(PoolDataSourceFactory.class);
-
+    private static final Logger       LOGGER = Logger.getLogger(PoolDataSourceFactory.class);
+    private static final int DEFAULT_MAX_ACTIVE = 20;
     private static GenericObjectPool connectionPool;
     private static DataSource        dataSource;
 
@@ -57,7 +58,14 @@ public class PoolDataSourceFactory {
 		    Class.forName(dtProps.getProperty("driver"));
 
 		    connectionPool = new GenericObjectPool();
-		    connectionPool.setMaxActive(20);
+		    
+		    if (NumberUtils.isNumber(dtProps.getProperty("maxActive"))) {
+			connectionPool.setMaxActive(Integer.valueOf(dtProps.getProperty("maxActive")));			
+		    } else {
+			connectionPool.setMaxActive(DEFAULT_MAX_ACTIVE);
+		    }
+		    
+		    connectionPool.setTestOnBorrow(Boolean.valueOf(dtProps.getProperty("testOnBorrow")));
 
 		    ConnectionFactory cf = new DriverManagerConnectionFactory(dtProps.getProperty("url"), 
 		                                                              dtProps.getProperty("user"),
