@@ -59,7 +59,7 @@ public class GroupFormView
 	Label nameLabel = new Label("Nome");
 	final TextBox nameField = new TextBox();
 
-	nameLabel.setWidth("40px");
+	nameLabel.setWidth("65px");
 
 	row1.add(nameLabel);
 	row1.add(nameField);
