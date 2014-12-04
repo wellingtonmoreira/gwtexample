@@ -69,7 +69,7 @@ public class MainView
 	MenuBar subMenuGroup = new MenuBar(true);
 
 	MenuItem subItemCreate = new MenuItem("Cadastrar", true, new ScheduledCommand() {
-	    
+
 	    @Override
 	    public void execute() {
 		new GroupFormView().showView();

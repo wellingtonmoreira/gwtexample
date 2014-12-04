@@ -62,7 +62,7 @@ public class GroupFormView
 	HorizontalPanel row1 = new HorizontalPanel();
 
 	row1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-	
+
 	Label nameLabel = new Label("Nome");
 	final TextBox nameField = new TextBox();
 
