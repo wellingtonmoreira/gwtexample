@@ -4,16 +4,18 @@ import br.com.wmoreira.gwtexample.client.service.GroupService;
 import br.com.wmoreira.gwtexample.client.service.GroupServiceAsync;
 import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
 import br.com.wmoreira.gwtexample.client.view.list.GroupListView;
+import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
 import br.com.wmoreira.gwtexample.client.view.util.Viewable;
 import br.com.wmoreira.gwtexample.shared.business.entity.Group;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -45,10 +47,13 @@ public class GroupFormView
 
     @Override
     public void showView() {
+	FormPanel form = new FormPanel();
+	FlowPanel flowPanel = new FlowPanel();
+	flowPanel.setStyleName("content");
+
 	Label title = new Label(edit ? "Editar Grupo" : "Cadastrar Grupo");
 	title.setHeight("25px");
-
-	FormPanel form = new FormPanel();
+	title.setStyleName("h2");
 
 	VerticalPanel rows = new VerticalPanel();
 
@@ -56,10 +61,10 @@ public class GroupFormView
 
 	HorizontalPanel row1 = new HorizontalPanel();
 
+	row1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+	
 	Label nameLabel = new Label("Nome");
 	final TextBox nameField = new TextBox();
-
-	nameLabel.setWidth("65px");
 
 	row1.add(nameLabel);
 	row1.add(nameField);
@@ -70,13 +75,13 @@ public class GroupFormView
 
 	    @Override
 	    public void onFailure(Throwable caught) {
-		Window.alert("Ocorreu um erro: " + caught.getMessage());
+		new AlertDialog("Ocorreu um erro: " + caught.getMessage()).show();;
 
 	    }
 
 	    @Override
 	    public void onSuccess(Integer result) {
-		Window.alert("Grupo cadastrado com sucesso!");
+		new AlertDialog("Grupo cadastrado com sucesso!").show();
 		new GroupListView().showView();
 	    }
 	};
@@ -85,13 +90,13 @@ public class GroupFormView
 
 	    @Override
 	    public void onFailure(Throwable caught) {
-		Window.alert("Ocorreu um erro: " + caught.getMessage());
+		new AlertDialog("Ocorreu um erro: " + caught.getMessage()).show();;
 
 	    }
 
 	    @Override
 	    public void onSuccess(Integer result) {
-		Window.alert("Grupo atualizado com sucesso!");
+		new AlertDialog("Grupo atualizado com sucesso!").show();;
 		new GroupListView().showView();
 	    }
 	};
@@ -133,7 +138,10 @@ public class GroupFormView
 
 	form.add(rows);
 
-	ViewPort.setContentView(title, form);
+	flowPanel.add(title);
+	flowPanel.add(form);
+
+	ViewPort.setContentView(flowPanel);
 
     }
 

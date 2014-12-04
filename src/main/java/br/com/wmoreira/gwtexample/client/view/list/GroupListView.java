@@ -7,6 +7,8 @@ import br.com.wmoreira.gwtexample.client.service.GroupService;
 import br.com.wmoreira.gwtexample.client.service.GroupServiceAsync;
 import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
 import br.com.wmoreira.gwtexample.client.view.form.GroupFormView;
+import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
+import br.com.wmoreira.gwtexample.client.view.util.ConfirmDialog;
 import br.com.wmoreira.gwtexample.client.view.util.Viewable;
 import br.com.wmoreira.gwtexample.shared.business.entity.Group;
 
@@ -15,9 +17,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -28,130 +30,144 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class GroupListView implements Viewable {
+public class GroupListView
+    implements Viewable {
 
-	private GroupServiceAsync groupService;
+    private GroupServiceAsync groupService;
 
-	public GroupListView() {
-		groupService = GWT.create(GroupService.class);
-	}
+    public GroupListView() {
+	groupService = GWT.create(GroupService.class);
+    }
 
-	@Override
-	public void showView() {
-		
-		VerticalPanel vPanel = new VerticalPanel();
-		HorizontalPanel panel = new HorizontalPanel();
-		final List<Group> list = new ArrayList<>();
-		
-		final CellTable<Group> grid = buildGrid();
+    @Override
+    public void showView() {
+	VerticalPanel vPanel = new VerticalPanel();
+	HorizontalPanel hPanel = new HorizontalPanel();
+	final List<Group> list = new ArrayList<>();
+	FlowPanel flowPanel = new FlowPanel();
+	flowPanel.setStyleName("content");
 
-		Label title = new Label("Listar Grupos");
-		title.setHeight("25px");
+	final CellTable<Group> grid = buildGrid();
 
-		panel.setSpacing(5);
+	grid.setRowCount(10);
 
-		final Button edit = new Button("Editar");
-		final Button delete = new Button("Deletar");
+	Label title = new Label("Listar Grupos");
 
-		edit.setEnabled(false);
-		delete.setEnabled(false);
+	title.setHeight("25px");
+	title.setStyleName("h2");
 
-		final AsyncCallback<List<Group>> findAllCallback = new AsyncCallback<List<Group>>() {
+	hPanel.setSpacing(5);
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert(caught.getMessage());
-			}
+	final Button edit = new Button("Editar");
+	final Button delete = new Button("Deletar");
 
-			@Override
-			public void onSuccess(List<Group> result) {
-				list.clear();
-				list.addAll(result);
-				grid.setRowData(list);
-			}
-		};
+	edit.setEnabled(false);
+	delete.setEnabled(false);
 
-		final AsyncCallback<Integer> deleteCallback = new AsyncCallback<Integer>() {
+	final AsyncCallback<List<Group>> findAllCallback = new AsyncCallback<List<Group>>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Ocorreu um erro: " + caught.getMessage());
-			}
+	    @Override
+	    public void onFailure(Throwable caught) {
+		new AlertDialog(caught.getMessage()).show();
+	    }
 
-			@Override
-			public void onSuccess(Integer result) {
-
-				groupService.findAll(findAllCallback);
-				Window.alert("Grupo removido com sucesso!");
-				edit.setEnabled(false);
-				delete.setEnabled(false);
-			}
-		};
-
-		edit.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				new GroupFormView(list.get(grid.getKeyboardSelectedRow()))
-						.showView();
-			}
-		});
-
-		delete.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				groupService.delete(list.get(grid.getKeyboardSelectedRow())
-						.getId(), deleteCallback);
-			}
-		});
-
-		panel.add(edit);
-		panel.add(delete);
-
-		grid.addDomHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				edit.setEnabled(true);
-				delete.setEnabled(true);
-
-			}
-		}, ClickEvent.getType());
-
+	    @Override
+	    public void onSuccess(List<Group> result) {
+		list.clear();
+		list.addAll(result);
 		grid.setRowData(list);
+	    }
+	};
 
-		vPanel.add(title);
-		vPanel.add(panel);
+	final AsyncCallback<Integer> deleteCallback = new AsyncCallback<Integer>() {
+
+	    @Override
+	    public void onFailure(Throwable caught) {
+		new AlertDialog("Ocorreu um erro: " + caught.getMessage()).show();
+	    }
+
+	    @Override
+	    public void onSuccess(Integer result) {
 
 		groupService.findAll(findAllCallback);
+		new AlertDialog("Grupo removido com sucesso!").show();
+		edit.setEnabled(false);
+		delete.setEnabled(false);
+	    }
+	};
 
-		ViewPort.setContentView(vPanel, grid);
-	}
+	edit.addClickHandler(new ClickHandler() {
 
-	private CellTable<Group> buildGrid() {
-		CellTable<Group> grid = new CellTable<>();
-		grid.setHeight("50%");
-		grid.setWidth("100%");
+	    @Override
+	    public void onClick(ClickEvent event) {
+		new GroupFormView(list.get(grid.getKeyboardSelectedRow())).showView();
+	    }
+	});
 
-		grid.addColumn(new TextColumn<Group>() {
+	delete.addClickHandler(new ClickHandler() {
 
-			@Override
-			public String getValue(Group object) {
-				return String.valueOf(object.getId());
-			}
+	    @Override
+	    public void onClick(ClickEvent event) {
+		ClickHandler okHandler = new ClickHandler() {
+		    
+		    @Override
+		    public void onClick(ClickEvent event) {
+			groupService.delete(list.get(grid.getKeyboardSelectedRow()).getId(), deleteCallback);
+		    }
+		};
+		new ConfirmDialog("Confirma a ação?", okHandler);
+	    }
+	});
 
-		}, "ID");
+	hPanel.add(edit);
+	hPanel.add(delete);
 
-		grid.addColumn(new TextColumn<Group>() {
+	grid.addDomHandler(new ClickHandler() {
 
-			@Override
-			public String getValue(Group object) {
-				return object.getName();
-			}
-		}, "Nome");
+	    @Override
+	    public void onClick(ClickEvent event) {
+		edit.setEnabled(true);
+		delete.setEnabled(true);
 
-		return grid;
-	}
+	    }
+	}, ClickEvent.getType());
+
+	grid.setRowData(list);
+
+	vPanel.add(title);
+	vPanel.add(hPanel);
+
+	groupService.findAll(findAllCallback);
+
+	flowPanel.add(vPanel);
+	flowPanel.add(grid);
+
+	ViewPort.setContentView(flowPanel);
+    }
+
+    private CellTable<Group> buildGrid() {
+	CellTable<Group> grid = new CellTable<>();
+	grid.setHeight("50%");
+	grid.setWidth("100%");
+
+	grid.addColumn(new TextColumn<Group>() {
+
+	    @Override
+	    public String getValue(Group object) {
+		return String.valueOf(object.getId());
+	    }
+
+	}, "ID");
+
+	grid.addColumn(new TextColumn<Group>() {
+
+	    @Override
+	    public String getValue(Group object) {
+		return object.getName();
+	    }
+	}, "Nome");
+
+	return grid;
+    }
 
 }

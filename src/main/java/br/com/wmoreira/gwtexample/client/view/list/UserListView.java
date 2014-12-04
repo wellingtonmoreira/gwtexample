@@ -7,6 +7,8 @@ import br.com.wmoreira.gwtexample.client.service.UserService;
 import br.com.wmoreira.gwtexample.client.service.UserServiceAsync;
 import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
 import br.com.wmoreira.gwtexample.client.view.form.UserFormView;
+import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
+import br.com.wmoreira.gwtexample.client.view.util.ConfirmDialog;
 import br.com.wmoreira.gwtexample.client.view.util.Viewable;
 import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
@@ -15,9 +17,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -28,151 +30,163 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class UserListView implements Viewable {
+public class UserListView
+    implements Viewable {
 
-	private UserServiceAsync userService;
+    private UserServiceAsync userService;
 
-	public UserListView() {
-		userService = GWT.create(UserService.class);
-	}
+    public UserListView() {
+	userService = GWT.create(UserService.class);
+    }
 
-	@Override
-	public void showView() {
+    @Override
+    public void showView() {
 
-		VerticalPanel vPanel = new VerticalPanel();
-		HorizontalPanel panel = new HorizontalPanel();
-		final List<User> list = new ArrayList<>();
+	VerticalPanel vPanel = new VerticalPanel();
+	HorizontalPanel panel = new HorizontalPanel();
+	final List<User> list = new ArrayList<>();
+	FlowPanel flowPanel = new FlowPanel();
+	flowPanel.setStyleName("content");
 
-		final CellTable<User> grid = buildGrid();
+	final CellTable<User> grid = buildGrid();
 
-		Label title = new Label("Listar Usuários");
-		title.setHeight("25px");
+	Label title = new Label("Listar Usuários");
+	title.setHeight("25px");
+	title.setStyleName("h2");
 
-		panel.setSpacing(5);
+	panel.setSpacing(5);
 
-		final Button edit = new Button("Editar");
-		final Button delete = new Button("Deletar");
+	final Button edit = new Button("Editar");
+	final Button delete = new Button("Deletar");
 
-		edit.setEnabled(false);
-		delete.setEnabled(false);
+	edit.setEnabled(false);
+	delete.setEnabled(false);
 
-		edit.addClickHandler(new ClickHandler() {
+	edit.addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
-				new UserFormView(list.get(grid.getKeyboardSelectedRow()))
-						.showView();
-			}
-		});
+	    @Override
+	    public void onClick(ClickEvent event) {
+		new UserFormView(list.get(grid.getKeyboardSelectedRow())).showView();
+	    }
+	});
 
-		final AsyncCallback<List<User>> findAllCallback = new AsyncCallback<List<User>>() {
+	final AsyncCallback<List<User>> findAllCallback = new AsyncCallback<List<User>>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert(caught.getMessage());
-			}
+	    @Override
+	    public void onFailure(Throwable caught) {
+		new AlertDialog(caught.getMessage()).show();
+	    }
 
-			@Override
-			public void onSuccess(List<User> result) {
-				list.clear();
-				list.addAll(result);
-				grid.setRowData(list);
-			}
-		};
+	    @Override
+	    public void onSuccess(List<User> result) {
+		list.clear();
+		list.addAll(result);
+		grid.setRowData(list);
+	    }
+	};
 
-		final AsyncCallback<Integer> deleteCallback = new AsyncCallback<Integer>() {
+	final AsyncCallback<Integer> deleteCallback = new AsyncCallback<Integer>() {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Ocorreu um erro: " + caught.getMessage());
-			}
+	    @Override
+	    public void onFailure(Throwable caught) {
+		new AlertDialog("Ocorreu um erro: " + caught.getMessage()).show();
+	    }
 
-			@Override
-			public void onSuccess(Integer result) {
-
-				userService.findAll(findAllCallback);
-				Window.alert("Usuário removido com sucesso!");
-				edit.setEnabled(false);
-				delete.setEnabled(false);
-			}
-		};
-
-		delete.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				userService.delete(list.get(grid.getKeyboardSelectedRow())
-						.getId(), deleteCallback);
-			}
-		});
-
-		panel.add(edit);
-		panel.add(delete);
-
-		grid.addDomHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				edit.setEnabled(true);
-				delete.setEnabled(true);
-
-			}
-		}, ClickEvent.getType());
-
-		vPanel.add(title);
-		vPanel.add(panel);
+	    @Override
+	    public void onSuccess(Integer result) {
 
 		userService.findAll(findAllCallback);
+		new AlertDialog("Usuário removido com sucesso!").show();
+		edit.setEnabled(false);
+		delete.setEnabled(false);
+	    }
+	};
 
-		ViewPort.setContentView(vPanel, grid);
-	}
+	delete.addClickHandler(new ClickHandler() {
 
-	private CellTable<User> buildGrid() {
-		CellTable<User> grid = new CellTable<>();
-		grid.setHeight("50%");
-		grid.setWidth("100%");
+	    @Override
+	    public void onClick(ClickEvent event) {
+		ClickHandler okHandler = new ClickHandler() {
+		    
+		    @Override
+		    public void onClick(ClickEvent event) {
+			userService.delete(list.get(grid.getKeyboardSelectedRow()).getId(), deleteCallback);
+		    }
+		};
+		new ConfirmDialog("Confirma a ação?", okHandler);
+	    }
+	});
 
-		grid.addColumn(new TextColumn<User>() {
+	panel.add(edit);
+	panel.add(delete);
 
-			@Override
-			public String getValue(User object) {
-				return String.valueOf(object.getId());
-			}
+	grid.addDomHandler(new ClickHandler() {
 
-		}, "ID");
+	    @Override
+	    public void onClick(ClickEvent event) {
+		edit.setEnabled(true);
+		delete.setEnabled(true);
 
-		grid.addColumn(new TextColumn<User>() {
+	    }
+	}, ClickEvent.getType());
 
-			@Override
-			public String getValue(User object) {
-				return object.getName();
-			}
-		}, "Nome");
+	vPanel.add(title);
+	vPanel.add(panel);
 
-		grid.addColumn(new TextColumn<User>() {
+	userService.findAll(findAllCallback);
 
-			@Override
-			public String getValue(User object) {
-				return object.getCreationDate().toString();
-			}
-		}, "Data de Criação");
+	flowPanel.add(vPanel);
+	flowPanel.add(grid);
 
-		grid.addColumn(new TextColumn<User>() {
+	ViewPort.setContentView(flowPanel);
+    }
 
-			@Override
-			public String getValue(User object) {
-				return object.isEnabled() ? "Sim" : "Não";
-			}
-		}, "Ativo?");
+    private CellTable<User> buildGrid() {
+	CellTable<User> grid = new CellTable<>();
+	grid.setHeight("50%");
+	grid.setWidth("100%");
 
-		grid.addColumn(new TextColumn<User>() {
+	grid.addColumn(new TextColumn<User>() {
 
-			@Override
-			public String getValue(User object) {
-				return object.getEmail();
-			}
-		}, "E-mail");
+	    @Override
+	    public String getValue(User object) {
+		return String.valueOf(object.getId());
+	    }
 
-		return grid;
-	}
+	}, "ID");
+
+	grid.addColumn(new TextColumn<User>() {
+
+	    @Override
+	    public String getValue(User object) {
+		return object.getName();
+	    }
+	}, "Nome");
+
+	grid.addColumn(new TextColumn<User>() {
+
+	    @Override
+	    public String getValue(User object) {
+		return object.getCreationDate().toString();
+	    }
+	}, "Data de Criação");
+
+	grid.addColumn(new TextColumn<User>() {
+
+	    @Override
+	    public String getValue(User object) {
+		return object.isEnabled() ? "Sim" : "Não";
+	    }
+	}, "Ativo?");
+
+	grid.addColumn(new TextColumn<User>() {
+
+	    @Override
+	    public String getValue(User object) {
+		return object.getEmail();
+	    }
+	}, "E-mail");
+
+	return grid;
+    }
 }
