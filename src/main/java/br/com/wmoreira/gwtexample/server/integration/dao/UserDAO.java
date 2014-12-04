@@ -32,7 +32,7 @@ public class UserDAO
     }
 
     @Override
-    public User find(int id) {
+    public User find(int id) throws Exception {
 	LOGGER.info("UserDAO | find() : id : " + id);
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("SELECT * FROM tb_user WHERE user_id = ?");
@@ -48,12 +48,12 @@ public class UserDAO
 	    return user;
 	} catch (SQLException e) {
 	    LOGGER.error("Exception thrown: " + e.getMessage());
-	    return null;
+	    throw e;
 	}
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAll() throws Exception {
 	LOGGER.info("UserDAO | findAll()");
 	try {
 	    CallableStatement stmt = conn.prepareCall("SELECT * FROM tb_user");
@@ -64,12 +64,12 @@ public class UserDAO
 	    return list;
 	} catch (SQLException e) {
 	    LOGGER.error("Exception thrown: " + e.getMessage());
-	    return null;
+	    throw e;
 	}
     }
 
     @Override
-    public int create(User object) {
+    public int create(User object) throws Exception {
 	LOGGER.info("UserDAO | create() : User : " + object.toString());
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("INSERT INTO tb_user VALUES(NEXTVAL('user_seq'), ?, ?, ?, ?, ?)");
@@ -85,12 +85,12 @@ public class UserDAO
 	    return result;
 	} catch (SQLException e) {
 	    LOGGER.error("Exception thrown: " + e.getMessage());
-	    return 0;
+	    throw e;
 	}
     }
 
     @Override
-    public int update(User object) {
+    public int update(User object) throws Exception {
 	LOGGER.info("UserDAO | update() : User : " + object.toString());
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("UPDATE tb_user SET name = ?, password = ?, creation_date = ?, enabled = ?, email = ? WHERE user_id = ?");
@@ -107,12 +107,12 @@ public class UserDAO
 	    return result;
 	} catch (SQLException e) {
 	    LOGGER.error("Exception thrown: " + e.getMessage());
-	    return 0;
+	    throw e;
 	}
     }
 
     @Override
-    public int delete(int id) {
+    public int delete(int id) throws Exception {
 	LOGGER.info("UserDAO | delete() : id : " + id);
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("DELETE FROM tb_user WHERE user_id = ?");
@@ -124,7 +124,7 @@ public class UserDAO
 	    return result;
 	} catch (SQLException e) {
 	    LOGGER.error("Exception thrown: " + e.getMessage());
-	    return 0;
+	    throw e;
 	}
     }
 }

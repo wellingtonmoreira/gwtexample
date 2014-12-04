@@ -27,27 +27,27 @@ public class GroupServiceImpl extends RemoteServiceServlet implements GroupServi
     }
     
     @Override
-    public Group find(int id) {
+    public Group find(int id) throws Exception {
 	return component.find(id);
     }
 
     @Override
-    public List<Group> findAll() {
+    public List<Group> findAll() throws Exception {
 	return component.findAll();
     }
 
     @Override
-    public int create(Group object) {
+    public int create(Group object) throws Exception {
 	return component.create(object);
     }
 
     @Override
-    public int update(Group object) {
+    public int update(Group object) throws Exception {
 	return component.update(object);
     }
 
     @Override
-    public int delete(int id) {
+    public int delete(int id) throws Exception {
 	return component.delete(id);
     }
 

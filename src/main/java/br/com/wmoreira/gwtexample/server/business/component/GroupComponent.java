@@ -21,27 +21,27 @@ public class GroupComponent implements Crudable<Group>{
     }
     
     @Override
-    public Group find(int id) {
+    public Group find(int id) throws Exception {
 	return dao.find(id);
     }
 
     @Override
-    public List<Group> findAll() {
+    public List<Group> findAll() throws Exception {
 	return dao.findAll();
     }
 
     @Override
-    public int create(Group object) {
+    public int create(Group object) throws Exception {
 	return dao.create(object);
     }
 
     @Override
-    public int update(Group object) {
+    public int update(Group object) throws Exception {
 	return dao.update(object);
     }
 
     @Override
-    public int delete(int id) {
+    public int delete(int id) throws Exception {
 	return dao.delete(id);
     }
 

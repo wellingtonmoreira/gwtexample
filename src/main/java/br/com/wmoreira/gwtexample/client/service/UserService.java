@@ -17,9 +17,9 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface UserService
     extends RemoteService {
 
-    User find(int id);
-    List<User> findAll();
-    int create(User object);
-    int update(User object);
-    int delete(int id);
+    User find(int id) throws Exception;
+    List<User> findAll() throws Exception;
+    int create(User object) throws Exception;
+    int update(User object) throws Exception;
+    int delete(int id) throws Exception;
 }

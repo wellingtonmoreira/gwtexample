@@ -31,7 +31,7 @@ public class GroupDAO implements Crudable<Group> {
     }
     
     @Override
-    public Group find(int id) {
+    public Group find(int id) throws Exception {
 	LOGGER.info("GroupDAO | find() : id : " + id);
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("SELECT * FROM tb_group WHERE group_id = ?");
@@ -47,12 +47,12 @@ public class GroupDAO implements Crudable<Group> {
 	    return tb_group;
         } catch (SQLException e) {
             LOGGER.error("Exception thrown: " + e.getMessage());
-            return null;
+            throw e;
         }
     }
 
     @Override
-    public List<Group> findAll() {
+    public List<Group> findAll() throws Exception {
 	LOGGER.info("GroupDAO | findAll()");
 	try {
 	    CallableStatement stmt = conn.prepareCall("SELECT * FROM tb_group");
@@ -63,12 +63,12 @@ public class GroupDAO implements Crudable<Group> {
 	    return list;
         } catch (SQLException e) {
             LOGGER.error("Exception thrown: " + e.getMessage());
-            return null;
+            throw e;
         }
     }
 
     @Override
-    public int create(Group object) {
+    public int create(Group object) throws Exception {
 	LOGGER.info("GroupDAO | create() : Group : " + object.toString());
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("INSERT INTO tb_group VALUES(NEXTVAL('group_seq'), ?)");
@@ -80,12 +80,12 @@ public class GroupDAO implements Crudable<Group> {
 	    return result;
         } catch (SQLException e) {
             LOGGER.error("Exception thrown: " + e.getMessage());
-            return 0;
+            throw e;
         }
     }
 
     @Override
-    public int update(Group object) {
+    public int update(Group object) throws Exception {
 	LOGGER.info("GroupDAO | update() : Group : " + object.toString());
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("UPDATE tb_group SET name = ? WHERE group_id = ?");
@@ -98,12 +98,12 @@ public class GroupDAO implements Crudable<Group> {
 	    return result;
         } catch (SQLException e) {
             LOGGER.error("Exception thrown: " + e.getMessage());
-            return 0;
+            throw e;
         }
     }
 
     @Override
-    public int delete(int id) {
+    public int delete(int id) throws Exception {
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("DELETE FROM tb_group WHERE group_id = ?");
 	    stmt.setInt(1, id);
@@ -114,7 +114,7 @@ public class GroupDAO implements Crudable<Group> {
 	    return result;
         } catch (SQLException e) {
             LOGGER.error("Exception thrown: " + e.getMessage());
-            return 0;
+            throw e;
         }
     }
 

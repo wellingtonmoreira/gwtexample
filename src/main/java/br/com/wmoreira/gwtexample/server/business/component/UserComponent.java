@@ -21,27 +21,27 @@ public class UserComponent implements Crudable<User>{
     }
     
     @Override
-    public User find(int id) {
+    public User find(int id) throws Exception {
 	return dao.find(id);
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAll() throws Exception {
 	return dao.findAll();
     }
 
     @Override
-    public int create(User object) {
+    public int create(User object) throws Exception {
 	return dao.create(object);
     }
 
     @Override
-    public int update(User object) {
+    public int update(User object) throws Exception {
 	return dao.update(object);
     }
 
     @Override
-    public int delete(int id) {
+    public int delete(int id) throws Exception {
 	return dao.delete(id);
     }
     

@@ -10,9 +10,9 @@ import java.util.List;
  */
 
 public interface Crudable<T> {
-    T find(int id);
-    List<T> findAll();
-    int create(T object);
-    int update(T object);
-    int delete(int id);
+    T find(int id) throws Exception;
+    List<T> findAll() throws Exception;
+    int create(T object) throws Exception;
+    int update(T object) throws Exception;
+    int delete(int id) throws Exception;
 }
