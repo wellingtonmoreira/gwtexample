@@ -1,9 +1,8 @@
-package br.com.wmoreira.gwtexample.client.view.form;
+package br.com.wmoreira.gwtexample.client.view;
 
 import br.com.wmoreira.gwtexample.client.service.GroupService;
 import br.com.wmoreira.gwtexample.client.service.GroupServiceAsync;
 import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
-import br.com.wmoreira.gwtexample.client.view.list.GroupListView;
 import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
 import br.com.wmoreira.gwtexample.client.view.util.Viewable;
 import br.com.wmoreira.gwtexample.shared.business.entity.Group;
@@ -27,26 +26,26 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class GroupFormView
+public class EditGroupView 
     implements Viewable {
 
     private boolean           edit;
     private Group             editObject;
     private GroupServiceAsync groupService;
 
-    public GroupFormView() {
+    public EditGroupView() {
 	groupService = GWT.create(GroupService.class);
 	edit = false;
     }
 
-    public GroupFormView(Group editObject) {
+    public EditGroupView(Group editObject) {
 	this();
 	this.edit = true;
 	this.editObject = editObject;
     }
 
     @Override
-    public void showView() {
+    public void show() {
 	FormPanel form = new FormPanel();
 	FlowPanel flowPanel = new FlowPanel();
 	flowPanel.setStyleName("content");
@@ -82,7 +81,7 @@ public class GroupFormView
 	    @Override
 	    public void onSuccess(Integer result) {
 		new AlertDialog("Grupo cadastrado com sucesso!").show();
-		new GroupListView().showView();
+		new GroupsView().show();
 	    }
 	};
 
@@ -97,7 +96,7 @@ public class GroupFormView
 	    @Override
 	    public void onSuccess(Integer result) {
 		new AlertDialog("Grupo atualizado com sucesso!").show();;
-		new GroupListView().showView();
+		new GroupsView().show();
 	    }
 	};
 
@@ -108,7 +107,7 @@ public class GroupFormView
 
 	    @Override
 	    public void onClick(ClickEvent event) {
-		new GroupListView().showView();
+		new GroupsView().show();
 	    }
 	});
 

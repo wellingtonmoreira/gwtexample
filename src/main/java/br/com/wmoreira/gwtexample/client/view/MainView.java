@@ -1,10 +1,6 @@
 package br.com.wmoreira.gwtexample.client.view;
 
 import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
-import br.com.wmoreira.gwtexample.client.view.form.GroupFormView;
-import br.com.wmoreira.gwtexample.client.view.form.UserFormView;
-import br.com.wmoreira.gwtexample.client.view.list.GroupListView;
-import br.com.wmoreira.gwtexample.client.view.list.UserListView;
 import br.com.wmoreira.gwtexample.client.view.util.Viewable;
 
 import com.google.gwt.core.client.Scheduler;
@@ -17,7 +13,7 @@ public class MainView
     implements Viewable {
 
     @Override
-    public void showView() {
+    public void show() {
 	HorizontalPanel panel = new HorizontalPanel();
 	panel.setWidth("100%");
 	panel.setHeight("50px");
@@ -42,7 +38,7 @@ public class MainView
 
 	    @Override
 	    public void execute() {
-		new UserFormView().showView();
+		new EditUserView().show();
 
 	    }
 	});
@@ -51,7 +47,7 @@ public class MainView
 
 	    @Override
 	    public void execute() {
-		new UserListView().showView();
+		new UsersView().show();
 	    }
 	});
 
@@ -72,14 +68,14 @@ public class MainView
 
 	    @Override
 	    public void execute() {
-		new GroupFormView().showView();
+		new EditGroupView().show();
 	    }
 	});
 	MenuItem subItemList = new MenuItem("Listar", true, new ScheduledCommand() {
 
 	    @Override
 	    public void execute() {
-		new GroupListView().showView();
+		new GroupsView().show();
 	    }
 	});
 

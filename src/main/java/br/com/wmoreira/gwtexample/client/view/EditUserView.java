@@ -1,11 +1,10 @@
-package br.com.wmoreira.gwtexample.client.view.form;
+package br.com.wmoreira.gwtexample.client.view;
 
 import java.sql.Date;
 
 import br.com.wmoreira.gwtexample.client.service.UserService;
 import br.com.wmoreira.gwtexample.client.service.UserServiceAsync;
 import br.com.wmoreira.gwtexample.client.view.core.ViewPort;
-import br.com.wmoreira.gwtexample.client.view.list.UserListView;
 import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
 import br.com.wmoreira.gwtexample.client.view.util.Viewable;
 import br.com.wmoreira.gwtexample.shared.business.entity.User;
@@ -31,26 +30,26 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class UserFormView
+public class EditUserView
     implements Viewable {
 
     private boolean          edit;
     private User             editObject;
     private UserServiceAsync userService;
 
-    public UserFormView() {
+    public EditUserView() {
 	userService = GWT.create(UserService.class);
 	edit = false;
     }
 
-    public UserFormView(User editObject) {
+    public EditUserView(User editObject) {
 	this();
 	this.edit = true;
 	this.editObject = editObject;
     }
 
     @Override
-    public void showView() {
+    public void show() {
 	Label title = new Label(edit ? "Editar Usuário" : "Cadastrar Usuário");
 	title.setHeight("25px");
 	title.setStyleName("h2");
@@ -102,7 +101,7 @@ public class UserFormView
 	    @Override
 	    public void onSuccess(Integer result) {
 		new AlertDialog("Usuário cadastrado com sucesso!").show();
-		new UserListView().showView();
+		new UsersView().show();
 	    }
 	};
 
@@ -117,7 +116,7 @@ public class UserFormView
 	    @Override
 	    public void onSuccess(Integer result) {
 		new AlertDialog("Usuário atualizado com sucesso!").show();
-		new UserListView().showView();
+		new UsersView().show();
 	    }
 	};
 
@@ -128,7 +127,7 @@ public class UserFormView
 
 	    @Override
 	    public void onClick(ClickEvent event) {
-		new UserListView().showView();
+		new UsersView().show();
 	    }
 	});
 
