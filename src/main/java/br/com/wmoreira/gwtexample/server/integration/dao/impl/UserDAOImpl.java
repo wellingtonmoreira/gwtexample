@@ -112,7 +112,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public int delete(int id) throws Exception {
-	LOGGER.info("UserDAO | delete() : id : " + id);
+	LOGGER.info("UserDAO | deleteButton() : id : " + id);
 	try {
 	    PreparedStatement stmt = conn.prepareStatement("DELETE FROM tb_user WHERE user_id = ?");
 	    stmt.setInt(1, id);

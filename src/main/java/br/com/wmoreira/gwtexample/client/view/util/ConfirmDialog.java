@@ -42,7 +42,7 @@ public class ConfirmDialog
 	this.setPopupPosition(getPopupLeft(), getPopupTop());
     }
     
-    public ConfirmDialog(String text, ClickHandler cancelHandler, ClickHandler okHandler) {
+    public ConfirmDialog(String text, ClickHandler okHandler, ClickHandler cancelHandler) {
 	ClickHandler closeHandler = new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {

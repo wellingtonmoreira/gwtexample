@@ -11,12 +11,12 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
 
-public class MainPresenter implements Presenter {
+public class MenuPresenter implements Presenter {
 
     private final HandlerManager eventBus;
     private final Display display;
     
-    public MainPresenter(HandlerManager eventBus, Display display) {
+    public MenuPresenter(HandlerManager eventBus, Display display) {
 	this.eventBus = eventBus;
 	this.display = display;
     }
