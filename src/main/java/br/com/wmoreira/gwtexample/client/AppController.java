@@ -9,13 +9,18 @@ import br.com.wmoreira.gwtexample.client.event.GroupsEventHandler;
 import br.com.wmoreira.gwtexample.client.event.UsersEvent;
 import br.com.wmoreira.gwtexample.client.event.UsersEventHandler;
 import br.com.wmoreira.gwtexample.client.presenter.EditGroupPresenter;
+import br.com.wmoreira.gwtexample.client.presenter.EditUserPresenter;
 import br.com.wmoreira.gwtexample.client.presenter.GroupsPresenter;
 import br.com.wmoreira.gwtexample.client.presenter.MenuPresenter;
 import br.com.wmoreira.gwtexample.client.presenter.Presenter;
+import br.com.wmoreira.gwtexample.client.presenter.UsersPresenter;
 import br.com.wmoreira.gwtexample.client.view.EditGroupView;
+import br.com.wmoreira.gwtexample.client.view.EditUserView;
 import br.com.wmoreira.gwtexample.client.view.GroupsView;
 import br.com.wmoreira.gwtexample.client.view.MenuView;
+import br.com.wmoreira.gwtexample.client.view.UsersView;
 import br.com.wmoreira.gwtexample.shared.business.entity.Group;
+import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -70,7 +75,12 @@ public class AppController implements ValueChangeHandler<String> {
 
 	    @Override
 	    public void onEditUser(EditUserEvent event) {
-		doEditUser();
+		User user = event.getUser();
+		if (user == null) {
+		    doEditUser();		    
+		} else {
+		    doEditUser(user);
+		}
 	    }
 	});
     }
@@ -87,7 +97,6 @@ public class AppController implements ValueChangeHandler<String> {
 	History.newItem(ViewToken.EDIT_GROUP, false);
 	Presenter presenter = new EditGroupPresenter(eventBus, new EditGroupView(true), group);
 	presenter.go(contentContainer);
-	
     }
     
     private void doUsers() {
@@ -96,6 +105,13 @@ public class AppController implements ValueChangeHandler<String> {
     
     private void doEditUser() {
 	History.newItem(ViewToken.EDIT_USER.toString());
+    }
+    
+    private void doEditUser(User user) {
+	History.newItem(ViewToken.EDIT_GROUP, false);
+	Presenter presenter = new EditUserPresenter(eventBus, new EditUserView(true), user);
+	presenter.go(contentContainer);
+	
     }
 
     public void go(HasWidgets menuContainer, HasWidgets contentContainer) {
@@ -123,9 +139,9 @@ public class AppController implements ValueChangeHandler<String> {
 	} else if (token == ViewToken.EDIT_GROUP) {
 	    presenter = new EditGroupPresenter(eventBus, new EditGroupView(false));
 	} else if (token == ViewToken.USERS) {
-
+	    presenter = new UsersPresenter(eventBus, new UsersView());
 	} else if (token == ViewToken.EDIT_USER) {
-
+	    presenter = new EditUserPresenter(eventBus, new EditUserView(false));
 	}
 
 	if (presenter != null) {

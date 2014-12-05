@@ -2,10 +2,10 @@ package br.com.wmoreira.gwtexample.client.view;
 
 import br.com.wmoreira.gwtexample.client.presenter.EditGroupPresenter;
 import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
-import br.com.wmoreira.gwtexample.client.view.util.ContentView;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class EditGroupView extends ContentView implements EditGroupPresenter.Display {
+public class EditGroupView extends FlowPanel implements EditGroupPresenter.Display {
     
     private final Button saveButton;
     private final Button cancelButton;

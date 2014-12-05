@@ -1,22 +1,19 @@
 package br.com.wmoreira.gwtexample.client.view;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import br.com.wmoreira.gwtexample.client.service.UserService;
-import br.com.wmoreira.gwtexample.client.service.UserServiceAsync;
+import br.com.wmoreira.gwtexample.client.presenter.UsersPresenter;
 import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
 import br.com.wmoreira.gwtexample.client.view.util.ConfirmDialog;
-import br.com.wmoreira.gwtexample.client.view.util.ContentView;
 import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -27,19 +24,19 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class UsersView extends ContentView{
-
-    private UserServiceAsync userService;
-
+public class UsersView extends FlowPanel implements UsersPresenter.Display{
+    
+    private final Button editButton;
+    private final Button deleteButton;
+    private final CellTable<User> grid;
+    
     public UsersView() {
-	userService = GWT.create(UserService.class);
-	this.setStyleName("content");
+	this.setStyleName("content");	
 
 	VerticalPanel vPanel = new VerticalPanel();
 	HorizontalPanel panel = new HorizontalPanel();
-	final List<User> list = new ArrayList<>();
 
-	final CellTable<User> grid = buildGrid();
+	grid = buildGrid();
 
 	Label title = new Label("Listar Usuários");
 	title.setHeight("25px");
@@ -47,84 +44,27 @@ public class UsersView extends ContentView{
 
 	panel.setSpacing(5);
 
-	final Button edit = new Button("Editar");
-	final Button delete = new Button("Deletar");
+	editButton = new Button("Editar");
+	deleteButton = new Button("Deletar");
 
-	edit.setEnabled(false);
-	delete.setEnabled(false);
+	editButton.setEnabled(false);
+	deleteButton.setEnabled(false);
 
-	edit.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		new EditUserView(list.get(grid.getKeyboardSelectedRow())).show();
-	    }
-	});
-
-	final AsyncCallback<List<User>> findAllCallback = new AsyncCallback<List<User>>() {
-
-	    @Override
-	    public void onFailure(Throwable caught) {
-		new AlertDialog(caught.getMessage()).show();
-	    }
-
-	    @Override
-	    public void onSuccess(List<User> result) {
-		list.clear();
-		list.addAll(result);
-		grid.setRowData(list);
-	    }
-	};
-
-	final AsyncCallback<Integer> deleteCallback = new AsyncCallback<Integer>() {
-
-	    @Override
-	    public void onFailure(Throwable caught) {
-		new AlertDialog("Ocorreu um erro: " + caught.getMessage()).show();
-	    }
-
-	    @Override
-	    public void onSuccess(Integer result) {
-
-		userService.findAll(findAllCallback);
-		new AlertDialog("Usuário removido com sucesso!").show();
-		edit.setEnabled(false);
-		delete.setEnabled(false);
-	    }
-	};
-
-	delete.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		ClickHandler okHandler = new ClickHandler() {
-
-		    @Override
-		    public void onClick(ClickEvent event) {
-			userService.delete(list.get(grid.getKeyboardSelectedRow()).getId(), deleteCallback);
-		    }
-		};
-		new ConfirmDialog("Confirma a ação?", okHandler);
-	    }
-	});
-
-	panel.add(edit);
-	panel.add(delete);
+	panel.add(editButton);
+	panel.add(deleteButton);
 
 	grid.addDomHandler(new ClickHandler() {
 
 	    @Override
 	    public void onClick(ClickEvent event) {
-		edit.setEnabled(true);
-		delete.setEnabled(true);
+		editButton.setEnabled(true);
+		deleteButton.setEnabled(true);
 
 	    }
 	}, ClickEvent.getType());
 
 	vPanel.add(title);
 	vPanel.add(panel);
-
-	userService.findAll(findAllCallback);
 
 	this.add(vPanel);
 	this.add(grid);
@@ -177,5 +117,35 @@ public class UsersView extends ContentView{
 	}, "E-mail");
 
 	return grid;
+    }
+
+    @Override
+    public HasClickHandlers getEditButton() {
+	return editButton;
+    }
+
+    @Override
+    public HasClickHandlers getDeleteButton() {
+	return deleteButton;
+    }
+
+    @Override
+    public void alertDialog(String text) {
+	new AlertDialog(text);
+    }
+
+    @Override
+    public void confirmDialog(String text, ClickHandler okHandler) {
+	new ConfirmDialog(text, okHandler);
+    }
+
+    @Override
+    public void setData(List<User> data) {
+	grid.setRowData(data);
+    }
+
+    @Override
+    public int getClickedRow(ClickEvent event) {
+	return grid.getKeyboardSelectedRow();
     }
 }

@@ -1,25 +1,20 @@
 package br.com.wmoreira.gwtexample.client.view;
 
-import java.sql.Date;
-
-import br.com.wmoreira.gwtexample.client.service.UserService;
-import br.com.wmoreira.gwtexample.client.service.UserServiceAsync;
+import br.com.wmoreira.gwtexample.client.presenter.EditUserPresenter;
 import br.com.wmoreira.gwtexample.client.view.util.AlertDialog;
-import br.com.wmoreira.gwtexample.client.view.util.ContentView;
-import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
-import com.google.gwt.core.shared.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ValueBoxBase;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -28,26 +23,15 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  *
  */
 
-public class EditUserView extends ContentView {
+public class EditUserView extends FlowPanel implements EditUserPresenter.Display{
+    private final TextBox nameField;
+    private final PasswordTextBox passwordField; 
+    private final TextBox emailField;
+    private final CheckBox enabledCheckbox;
+    private final Button cancelButton;
+    private final Button saveButton;
 
-    private boolean          edit;
-    private User             editObject;
-    private UserServiceAsync userService;
-
-    public EditUserView() {
-	edit = false;
-	construct();
-    }
-
-    public EditUserView(User editObject) {
-	this.edit = true;
-	this.editObject = editObject;
-	construct();
-    }
-    
-    private void construct() {
-	userService = GWT.create(UserService.class);
-	
+    public EditUserView(boolean edit) {
 	Label title = new Label(edit ? "Editar Usuário" : "Cadastrar Usuário");
 	title.setHeight("25px");
 	title.setStyleName("h2");
@@ -62,10 +46,10 @@ public class EditUserView extends ContentView {
 	row1.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 	
 	Label nameLabel = new Label("Nome");
-	final TextBox nameField = new TextBox();
+	nameField = new TextBox();
 
 	Label passwordLabel = new Label("Senha");
-	final PasswordTextBox passwordField = new PasswordTextBox();
+	passwordField = new PasswordTextBox();
 
 	row1.add(nameLabel);
 	row1.add(nameField);
@@ -76,10 +60,10 @@ public class EditUserView extends ContentView {
 
 	row2.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 	
-	final CheckBox enabledCheckbox = new CheckBox("Ativo?");
+	enabledCheckbox = new CheckBox("Ativo?");
 
 	Label emailLabel = new Label("E-mail");
-	final TextBox emailField = new TextBox();
+	emailField = new TextBox();
 
 	row2.add(emailLabel);
 	row2.add(emailField);
@@ -87,67 +71,10 @@ public class EditUserView extends ContentView {
 
 	HorizontalPanel buttons = new HorizontalPanel();
 
-	final AsyncCallback<Integer> createCallback = new AsyncCallback<Integer>() {
-
-	    @Override
-	    public void onFailure(Throwable caught) {
-		new AlertDialog("Ocorreu um erro: " + caught.getMessage()).show();
-
-	    }
-
-	    @Override
-	    public void onSuccess(Integer result) {
-		new AlertDialog("Usuário cadastrado com sucesso!").show();
-		new UsersView().show();
-	    }
-	};
-
-	final AsyncCallback<Integer> updateCallback = new AsyncCallback<Integer>() {
-
-	    @Override
-	    public void onFailure(Throwable caught) {
-		new AlertDialog("Ocorreu um erro: " + caught.getMessage()).show();
-
-	    }
-
-	    @Override
-	    public void onSuccess(Integer result) {
-		new AlertDialog("Usuário atualizado com sucesso!").show();
-		new UsersView().show();
-	    }
-	};
-
-	Button cancelButton = new Button("Cancelar");
-	Button saveButton = new Button("Salvar");
-
-	cancelButton.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		new UsersView().show();
-	    }
-	});
-
-	saveButton.addClickHandler(new ClickHandler() {
-
-	    @Override
-	    public void onClick(ClickEvent event) {
-		User user = new User(nameField.getText(), passwordField.getText(), new Date(new java.util.Date().getTime()),
-		                     enabledCheckbox.getValue(), emailField.getText());
-		if (edit) {
-		    user.setId(editObject.getId());
-		    userService.update(user, updateCallback);
-		} else {
-		    userService.create(user, createCallback);
-		}
-	    }
-	});
+	cancelButton = new Button("Cancelar");
+	saveButton = new Button("Salvar");
 
 	if (edit) {
-	    nameField.setText(editObject.getName());
-	    passwordField.setText(editObject.getPassword());
-	    enabledCheckbox.setValue(editObject.isEnabled());
-	    emailField.setText(editObject.getEmail());
 	    buttons.add(cancelButton);
 	}
 
@@ -163,4 +90,38 @@ public class EditUserView extends ContentView {
 	this.add(form);
     }
 
+    @Override
+    public ValueBoxBase<String> getNameField() {
+	return nameField;
+    }
+
+    @Override
+    public ValueBoxBase<String> getPasswordField() {
+	return passwordField;
+    }
+
+    @Override
+    public ValueBoxBase<String> getEmailField() {
+	return emailField;
+    }
+
+    @Override
+    public HasValue<Boolean> getEnabledCheckbox() {
+	return enabledCheckbox;
+    }
+
+    @Override
+    public HasClickHandlers getSaveButton() {
+	return saveButton;
+    }
+
+    @Override
+    public HasClickHandlers getCancelButton() {
+	return cancelButton;
+    }
+
+    @Override
+    public void alertDialog(String text) {
+	new AlertDialog(text);
+    }
 }

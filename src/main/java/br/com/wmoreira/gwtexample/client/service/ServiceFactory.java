@@ -18,7 +18,7 @@ public class ServiceFactory {
     
     public static UserServiceAsync getUserService() {
 	if (userService == null) {
-	    userService = GWT.create(UserServiceAsync.class);
+	    userService = GWT.create(UserService.class);
 	}
 	
 	return userService;

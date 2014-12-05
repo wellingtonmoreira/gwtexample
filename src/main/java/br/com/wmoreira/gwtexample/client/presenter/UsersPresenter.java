@@ -2,10 +2,10 @@ package br.com.wmoreira.gwtexample.client.presenter;
 
 import java.util.List;
 
-import br.com.wmoreira.gwtexample.client.event.EditGroupEvent;
-import br.com.wmoreira.gwtexample.client.service.GroupServiceAsync;
+import br.com.wmoreira.gwtexample.client.event.EditUserEvent;
 import br.com.wmoreira.gwtexample.client.service.ServiceFactory;
-import br.com.wmoreira.gwtexample.shared.business.entity.Group;
+import br.com.wmoreira.gwtexample.client.service.UserServiceAsync;
+import br.com.wmoreira.gwtexample.shared.business.entity.User;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -15,25 +15,25 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
-public class GroupsPresenter implements Presenter {
+public class UsersPresenter implements Presenter {
 
-    private final GroupServiceAsync groupService;
+    private final UserServiceAsync  userService;
     private HandlerManager          eventBus;
     private Display                 display;
-    private List<Group>             groups;
+    private List<User>              users;
 
     public interface Display {
 	HasClickHandlers getEditButton();
 	HasClickHandlers getDeleteButton();
 	void alertDialog(String text);
 	void confirmDialog(String text, ClickHandler okHandler);
-	void setData(List<Group> data);
+	void setData(List<User> data);
 	int getClickedRow(ClickEvent event);
 	Widget asWidget();
     }
 
-    public GroupsPresenter(HandlerManager eventBus, Display display) {
-	groupService = ServiceFactory.getGroupService();
+    public UsersPresenter(HandlerManager eventBus, Display display) {
+	userService = ServiceFactory.getUserService();
 	this.eventBus = eventBus;
 	this.display = display;
 	bind();
@@ -44,7 +44,7 @@ public class GroupsPresenter implements Presenter {
 
 	    @Override
 	    public void onClick(ClickEvent event) {
-		eventBus.fireEvent(new EditGroupEvent(groups.get(display.getClickedRow(event))));
+		eventBus.fireEvent(new EditUserEvent(users.get(display.getClickedRow(event))));
 	    }
 	});
 
@@ -56,7 +56,7 @@ public class GroupsPresenter implements Presenter {
 		    
 		    @Override
 		    public void onClick(ClickEvent event) {
-			deleteGroup(groups.get(display.getClickedRow(event)).getId());
+			deleteUser(users.get(display.getClickedRow(event)).getId());
 		    }
 		});
 	    }
@@ -65,39 +65,39 @@ public class GroupsPresenter implements Presenter {
 
     @Override
     public void go(HasWidgets container) {
-	loadGroups();
+	loadUsers();
 
 	container.clear();
 	container.add(display.asWidget());
     }
 
-    private void loadGroups() {
-	groupService.findAll(new AsyncCallback<List<Group>>() {
+    private void loadUsers() {
+	userService.findAll(new AsyncCallback<List<User>>() {
 
 	    @Override
-	    public void onSuccess(List<Group> result) {
-		groups = result;
-		display.setData(groups);
+	    public void onSuccess(List<User> result) {
+		users = result;
+		display.setData(users);
 	    }
 
 	    @Override
 	    public void onFailure(Throwable caught) {
-		display.alertDialog("Ocorreu um erro ao listar os grupos: " + caught.getMessage());
+		display.alertDialog("Ocorreu um erro ao listar os usuários: " + caught.getMessage());
 	    }
 	});
     }
 
-    private void deleteGroup(int id) {
-	groupService.delete(id, new AsyncCallback<Integer>() {
+    private void deleteUser(int id) {
+	userService.delete(id, new AsyncCallback<Integer>() {
 	    @Override
 	    public void onSuccess(Integer result) {
-		loadGroups();
-		display.alertDialog("Grupo removido com sucesso!");
+		loadUsers();
+		display.alertDialog("Usuário removido com sucesso!");
 	    }
 
 	    @Override
 	    public void onFailure(Throwable caught) {
-		display.alertDialog("Ocorreu um erro ao remover o grupo: " + caught.getMessage());
+		display.alertDialog("Ocorreu um erro ao remover o usuário: " + caught.getMessage());
 	    }
 	});
     }
