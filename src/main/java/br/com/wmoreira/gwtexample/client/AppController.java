@@ -1,13 +1,16 @@
 package br.com.wmoreira.gwtexample.client;
 
+import br.com.wmoreira.gwtexample.client.presenter.MainPresenter;
 import br.com.wmoreira.gwtexample.client.presenter.Presenter;
 import br.com.wmoreira.gwtexample.client.service.GroupServiceAsync;
 import br.com.wmoreira.gwtexample.client.service.UserServiceAsync;
+import br.com.wmoreira.gwtexample.client.view.MainView;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
 
 public class AppController implements ValueChangeHandler<String>{
@@ -43,19 +46,18 @@ public class AppController implements ValueChangeHandler<String>{
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event) {
 		String token = event.getValue();
-		
 		if (token != null) {
 			Presenter presenter = null;
 			
 			if (token.equals("main")) {
-				
+				presenter = new MainPresenter(eventBus, new MainView());
 			}
 			
 			if (presenter != null) {
 				if (token.equals("main")) {
-					presenter.go(menuContainer); 
+					presenter.go(menuContainer);
 				} else {
-					presenter.go(contentContainer);					
+					presenter.go(contentContainer);
 				}
 			}
 		}

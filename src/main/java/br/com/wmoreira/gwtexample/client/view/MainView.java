@@ -1,83 +1,71 @@
 package br.com.wmoreira.gwtexample.client.view;
 
-import br.com.wmoreira.gwtexample.client.view.util.MenuView;
+import br.com.wmoreira.gwtexample.client.presenter.MainPresenter;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 
-public class MainView extends MenuView {
+public class MainView extends MenuBar implements MainPresenter.Display {
 
-    public MainView() {
-	this.setWidth("100%");
-	this.setHeight("50px");
+	private final MenuItem editGroup;
+	private final MenuItem groups;
+	private final MenuItem editUser;
+	private final MenuItem users;
+	
+	public MainView() {
+		this.setWidth("100%");
 
-	MenuBar menu = new MenuBar();
-	menu.setAutoOpen(true);
+		this.setAutoOpen(true);
 
-	menu.addItem(buildUserMenu());
-	menu.addItem(buildGroupMenu());
+		MenuItem userMenu;
 
-	this.add(menu);
-    }
+		MenuBar subMenuUser = new MenuBar(true);
 
-    private MenuItem buildUserMenu() {
-	MenuItem userMenu;
+		editUser = new MenuItem(SafeHtmlUtils.fromString("Cadastrar"));
 
-	MenuBar subMenuUser = new MenuBar(true);
+		users = new MenuItem(SafeHtmlUtils.fromString("Listar"));
 
-	MenuItem subItemCreate = new MenuItem("Cadastrar", new Scheduler.ScheduledCommand() {
+		subMenuUser.addItem(editUser);
+		subMenuUser.addItem(users);
 
-	    @Override
-	    public void execute() {
-		new EditUserView().show();
+		userMenu = new MenuItem("Usuários", subMenuUser);
 
-	    }
-	});
+		this.addItem(userMenu);
 
-	MenuItem subItemList = new MenuItem("Listar", new Scheduler.ScheduledCommand() {
+		MenuItem groupMenu;
 
-	    @Override
-	    public void execute() {
-		new UsersView().show();
-	    }
-	});
+		MenuBar subMenuGroup = new MenuBar(true);
 
-	subMenuUser.addItem(subItemCreate);
-	subMenuUser.addItem(subItemList);
+		editGroup = new MenuItem(SafeHtmlUtils.fromString("Cadastrar"));
 
-	userMenu = new MenuItem("Usuários", subMenuUser);
+		groups = new MenuItem(SafeHtmlUtils.fromString("Listar"));
 
-	return userMenu;
-    }
+		subMenuGroup.addItem(editGroup);
+		subMenuGroup.addItem(groups);
 
-    private MenuItem buildGroupMenu() {
-	MenuItem groupMenu;
+		groupMenu = new MenuItem("Grupos", subMenuGroup);
+		
+		this.addItem(groupMenu);
+	}
 
-	MenuBar subMenuGroup = new MenuBar(true);
+	@Override
+	public MenuItem getEditUser() {
+		return editUser;
+	}
 
-	MenuItem subItemCreate = new MenuItem("Cadastrar", true, new ScheduledCommand() {
+	@Override
+	public MenuItem getUsers() {
+		return users;
+	}
 
-	    @Override
-	    public void execute() {
-		new EditGroupView().show();
-	    }
-	});
-	MenuItem subItemList = new MenuItem("Listar", true, new ScheduledCommand() {
+	@Override
+	public MenuItem getEditGroup() {
+		return editGroup;
+	}
 
-	    @Override
-	    public void execute() {
-		new GroupsView().show();
-	    }
-	});
-
-	subMenuGroup.addItem(subItemCreate);
-	subMenuGroup.addItem(subItemList);
-
-	groupMenu = new MenuItem("Grupos", subMenuGroup);
-
-	return groupMenu;
-    }
-
+	@Override
+	public MenuItem getGroups() {
+		return groups;
+	}
 }
